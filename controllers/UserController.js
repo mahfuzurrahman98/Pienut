@@ -1,9 +1,10 @@
 import User from '../models/User.js';
 
-export default class UserController {
-
-  async getAll() {
-    const users = await User.find();
-    return users;
+class UserController {
+  async getAll(req, res) {
+    let users = await User.find();
+    res.send(users);
   }
 }
+
+export default new UserController();

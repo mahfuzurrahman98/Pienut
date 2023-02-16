@@ -1,18 +1,25 @@
 import Model from "../base/Model.js";
 
-const schema = { // simply write your schema here
-  name: String,
-  username: String,
-  userType: Number,
-};
+// const schemaObj = { // simply write your schemaObj here
+//   name: String,
+//   username: String,
+//   userType: Number,
+// };
 
 class User extends Model {
+  collectionName = 'users';
+
+  schemaObj = { // simply write your schema rules here
+    name: String,
+    username: String,
+    userType: Number,
+  };
 
   constructor() {
-    super('users', schema);
+    super();
+    this.makeModel(this.collectionName, this.schemaObj);
     return this.Model;
   }
-
 }
 
 export default new User();
