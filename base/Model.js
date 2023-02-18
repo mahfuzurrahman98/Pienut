@@ -9,7 +9,7 @@ export default class Model {
   }
 
   makeSchema(schema) {
-    return new this.db.Schema(schema);
+    return new this.db.Schema(schema, { timestamps: true });
   }
 
   makeModel(name, schema) {
