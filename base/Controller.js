@@ -1,4 +1,4 @@
-import Auth from "./helpers/Auth.js";
+import Password from "./helpers/Password.js";
 
 export default class Controller {
   constructor() { }
@@ -51,7 +51,7 @@ export default class Controller {
     try {
       let data = new this.Model(req.body);
       if (data.password) {
-        data.password = await Auth.hashPassword(data.password);
+        data.password = await Password.hash(data.password);
       }
       await data.save();
       if (data.password) {

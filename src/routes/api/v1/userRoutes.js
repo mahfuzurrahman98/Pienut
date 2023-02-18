@@ -1,13 +1,10 @@
-import { Router } from 'express';
+import Route from '../../../../base/Route.js';
 import UserController from '../../../controllers/UserController.js';
 
-const userRouter = Router();
+Route.get('/', UserController, 'index');
+Route.get('/:id', UserController, 'show');
+Route.delete('/delete/:id', UserController, 'delete');
+Route.post('/register', UserController, 'store');
+Route.put('/update/:id', UserController, 'update');
 
-userRouter.get('/', UserController.index.bind(UserController));
-userRouter.get('/:id', UserController.show.bind(UserController));
-userRouter.delete('/delete/:id', UserController.delete.bind(UserController));
-
-userRouter.post('/register', UserController.store.bind(UserController));
-
-
-export default userRouter;
+export default Route.router;

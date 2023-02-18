@@ -1,0 +1,10 @@
+import Route from '../../../../base/Route.js';
+import AuthController from '../../../controllers/AuthController.js';
+
+
+Route.post('/register', AuthController, 'store');
+Route.post('/login', AuthController, 'login');
+Route.post('/profile', AuthController, 'profile');
+Route.post('/logout', AuthController, 'logout');
+
+export default Route.router;

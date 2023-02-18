@@ -1,8 +1,8 @@
-import ExpressApp from '../base/ExpressApp.js';
+import MExpress from '../base/MExpress.js';
 import v1Routes from './routes/api/v1/index.js';
 
-const expressApp = new ExpressApp();
+const mexpress = new MExpress();
 
-expressApp.useRoute('/api/v1/', v1Routes);
+mexpress.useRoute('/api/v1/', v1Routes);
 
-export default expressApp.app;
+export default mexpress.app;
