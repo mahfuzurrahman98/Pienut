@@ -1,6 +1,7 @@
-// db.js
-
+import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+
+dotenv.config();
 
 class Database {
   static instance = null;
@@ -8,7 +9,7 @@ class Database {
   static getInstance() {
     if (!Database.instance) {
       mongoose.set('strictQuery', true);
-      mongoose.connect('mongodb://localhost:27017/wetube', {
+      mongoose.connect(process.env.DB_URL, {
         useNewUrlParser: true,
         useUnifiedTopology: true
       }).then(() => {

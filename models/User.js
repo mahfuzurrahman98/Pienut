@@ -1,16 +1,14 @@
 import Model from "../base/Model.js";
 
-// const schemaObj = { // simply write your schemaObj here
-//   name: String,
-//   username: String,
-//   userType: Number,
-// };
-
 class User extends Model {
   collectionName = 'users';
 
   schemaObj = { // simply write your schema rules here
     name: String,
+    email: {
+      type: String,
+      required: true,
+    },
     username: String,
     userType: Number,
   };

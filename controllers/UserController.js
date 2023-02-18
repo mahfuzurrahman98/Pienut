@@ -1,10 +1,12 @@
+import Controller from '../base/Controller.js';
 import User from '../models/User.js';
 
-class UserController {
-  async getAll(req, res) {
-    let users = await User.find();
-    res.send(users);
+class UserController extends Controller {
+  constructor() {
+    super();
+    this.Model = User;
   }
+
 }
 
 export default new UserController();
