@@ -31,7 +31,7 @@ export default class Controller {
   async show(req, res) {
     try {
       const id = req.params.id;
-      let data = await this.Model.find({ _id: id });
+      let data = await this.Model.findById({ _id: id });
       this.apiResponse(res, 200, 'successfully fetched', data);
     } catch (err) {
       this.apiResponse(res, 500, err);
