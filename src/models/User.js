@@ -30,7 +30,11 @@ class User extends Model {
     active: {
       type: Boolean,
       default: true
-    }
+    },
+    deletedAt: {
+      type: Date,
+      default: null
+    },
   }
 
   constructor() {
