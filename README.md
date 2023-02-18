@@ -5,5 +5,5 @@
 
 <hr>
 ● .env file contains all of your environemt variables<br>
-● you only modify /src/App.js to use new routes and middlware<br>
+● you only modify /src/App.js to add new routes and middlware<br>
 ● create your controllers in /src/controllers, models in /src/models, and routes in /src/routes<br>
