@@ -1,20 +1,21 @@
-import Password from "./helpers/Password.js";
+import errorMessageFormatter from './helpers/errorMessageFormatter.js';
+import Password from './helpers/Password.js';
 
 export default class Controller {
-  constructor() { }
+  constructor() {}
 
   // this is a helper function to refactor the json response
-  apiResponse(res, status, message, data = null) {
+  sendApiResponse(res, status, message, data = null) {
+    console.log(message);
     let json = {
       success: parseInt(status / 100) == 2 ? true : false,
       status: status,
-      message: message
+      message: message,
     };
     if (data) {
-      json.data = data
+      json.data = data;
     }
-    res.status(status)
-      .send(json);
+    res.status(status).send(json);
   }
 
   // show all data
@@ -22,11 +23,11 @@ export default class Controller {
     try {
       let data = await this.Model.find();
       if (!data || data.length == 0) {
-        return this.apiResponse(res, 404, 'data not found');
+        return this.sendApiResponse(res, 404, 'data not found');
       }
-      this.apiResponse(res, 200, 'successfully fetched', data);
+      this.sendApiResponse(res, 200, 'successfully fetched', data);
     } catch (err) {
-      this.apiResponse(res, 500, err);
+      this.sendApiResponse(res, 500, err);
       console.log(err);
     }
   }
@@ -37,29 +38,41 @@ export default class Controller {
       const id = req.params.id;
       let data = await this.Model.findById(id);
       if (!data) {
-        return this.apiResponse(res, 404, 'data not found');
+        return this.sendApiResponse(res, 404, 'data not found');
       }
-      this.apiResponse(res, 200, 'successfully fetched', data);
+      this.sendApiResponse(res, 200, 'successfully fetched', data);
     } catch (err) {
-      this.apiResponse(res, 500, err);
+      this.sendApiResponse(res, 500, err);
       console.log(err);
     }
   }
 
   // store a data
   async store(req, res) {
+    let data = new this.Model(req.body);
+
+    // validate first
     try {
-      let data = new this.Model(req.body);
+      await data.validate();
+    } catch (err) {
+      this.sendApiResponse(res, 400, errorMessageFormatter(err.message));
+      return;
+    }
+
+    // fire the query
+    try {
       if (data.password) {
+        // only for user creation
         data.password = await Password.hash(data.password);
       }
       await data.save();
       if (data.password) {
+        // only for user creation
         data.password = undefined;
       }
-      this.apiResponse(res, 201, 'created successfully', data);
+      this.sendApiResponse(res, 201, 'created successfully', data);
     } catch (err) {
-      this.apiResponse(res, 500, err);
+      this.sendApiResponse(res, 500, err);
     }
   }
 
@@ -69,13 +82,13 @@ export default class Controller {
       const id = req.params.id;
       let data = await this.Model.findById(id);
       if (!data) {
-        return this.apiResponse(res, 404, 'data not found');
+        return this.sendApiResponse(res, 404, 'data not found');
       }
       data.set(req.body);
       await data.save();
-      this.apiResponse(res, 200, 'updated successfully', data);
+      this.sendApiResponse(res, 200, 'updated successfully', data);
     } catch (err) {
-      this.apiResponse(res, 500, err);
+      this.sendApiResponse(res, 500, err);
     }
   }
 
@@ -85,11 +98,11 @@ export default class Controller {
       const id = req.params.id;
       let data = await this.Model.findByIdAndDelete({ _id: id });
       if (!data) {
-        return this.apiResponse(res, 404, 'data not found');
+        return this.sendApiResponse(res, 404, 'data not found');
       }
-      this.apiResponse(res, 200, 'deleted successfully');
+      this.sendApiResponse(res, 200, 'deleted successfully');
     } catch (err) {
-      this.apiResponse(res, 500, err);
+      this.sendApiResponse(res, 500, err);
     }
   }
 
@@ -99,13 +112,13 @@ export default class Controller {
       const id = req.params.id;
       let data = await this.Model.findById({ _id: id });
       if (!data) {
-        return this.apiResponse(res, 404, 'data not found');
+        return this.sendApiResponse(res, 404, 'data not found');
       }
       data.deletedAt = new Date();
       await data.save();
-      this.apiResponse(res, 200, 'deleted successfully');
+      this.sendApiResponse(res, 200, 'deleted successfully');
     } catch (err) {
-      this.apiResponse(res, 500, err);
+      this.sendApiResponse(res, 500, err);
     }
   }
 }

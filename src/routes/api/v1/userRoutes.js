@@ -3,8 +3,7 @@ import UserController from '../../../controllers/UserController.js';
 
 Route.get('/', UserController, 'index');
 Route.get('/:id', UserController, 'show');
-Route.delete('/delete/:id', UserController, 'delete');
-Route.post('/register', UserController, 'store');
-Route.put('/update/:id', UserController, 'update');
+Route.delete('/:id', UserController, 'delete');
+Route.put('/:id', UserController, 'update');
 
 export default Route.router;
