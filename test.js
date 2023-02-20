@@ -1,24 +1,23 @@
-function ff(errMessage) {
-  const index = errMessage.indexOf(':');
-  if (index !== -1) {
-    errMessage = errMessage.substring(index + 2);
-  }
+// const rules = {
+//   email: {
+//     required: [true, 'Email is mandatory.'],
+//     isEmail: [true, 'Email format is invalid.'],
+//     isUnique: [['users', 'email'], 'Email is already taken.'],
+//   },
+//   password: {},
+// };
 
-  const arr = errMessage.split(',');
+// for (let key in rules) {
+//   let value = rules[key];
+//   // if value is empty object print "no rules" else print the value
+//   // console.log(value === {} ? 'no rules' : value);
+//   console.log( ? 'no rules' : value);
+// }
 
-  console.log(arr);
-
-  const obj = arr
-    .map((item) => item.split(':').map((val) => val.trim()))
-    .reduce((acc, [key, value]) => {
-      acc[key] = value;
-      return acc;
-    }, {});
-
-  return obj;
-}
-
-const errMessage =
-  'u_users validation failed: name: Name is required, username: Username is already taken';
-
-console.log(ff(errMessage));
+const errors = {
+  email: 'Email is mandatory.',
+  password: 'Password is mandatory.',
+  default: 'Something went wrong.',
+};
+let key = 'email';
+console.log(errors[key]);
