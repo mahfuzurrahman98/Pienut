@@ -1,4 +1,4 @@
-class MExpressValidator {
+class MXpressValidator {
   constructor() {}
 
   async isUnique(collectionName, fieldName, value) {

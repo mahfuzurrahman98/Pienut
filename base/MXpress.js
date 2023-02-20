@@ -1,6 +1,6 @@
-import express from "express";
+import express from 'express';
 
-class MExpress {
+class MXpress {
   constructor() {
     this.app = express();
     this.app.use(express.urlencoded({ extended: false }));
@@ -14,7 +14,6 @@ class MExpress {
   useMiddleware(middleware) {
     this.app.use(middleware);
   }
-
 }
 
-export default MExpress;
+export default MXpress;
