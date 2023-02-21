@@ -1,15 +1,14 @@
-import validator from 'validator';
+// import validator from 'validator';
 import Database from './Database.js';
 
 export default class MXpressValidator {
   constructor(rules) {
-    this.validator = validator;
+    // this.validator = validator;
     this.rules = rules;
     this.db = Database.getInstance();
   }
 
   emptyObject(obj) {
-    console.log('emptyObject: ', obj);
     return Object.keys(obj).length === 0;
   }
 
@@ -69,9 +68,10 @@ export default class MXpressValidator {
       params = [params];
     }
 
+    let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (params[0] === true) {
       // field data msut be an email
-      if (!this.validator.isEmail(fieldData)) {
+      if (fieldData.match(regex) == null) {
         // field data is not an email, throw error
         return params.length === 2 && params[1].trim() != ''
           ? params[1]
@@ -162,7 +162,7 @@ export default class MXpressValidator {
       params = [params];
     }
 
-    if (this.validator.isInt(params[0])) {
+    if (Number.isInteger(params[0])) {
       // the length msut be an integer
       if (fieldData.length < params[0]) {
         // the length is less than the minimum length, throw error
@@ -192,7 +192,7 @@ export default class MXpressValidator {
       params = [params];
     }
 
-    if (this.validator.isInt(params[0])) {
+    if (Number.isInteger(params[0])) {
       // the length msut be an integer
       if (fieldData.length > params[0]) {
         // the length is greater than the maximum length, throw error
@@ -563,7 +563,8 @@ export default class MXpressValidator {
     // params[0] is the regex
     // params[1] is the error message
 
-    if (fieldData.match(params[0])) {
+    let regex = new RegExp(params[0]);
+    if (typeof fieldData === 'string' && fieldData.match(regex)) {
       // fieldData matches the regex, no error
       return {};
     } else {

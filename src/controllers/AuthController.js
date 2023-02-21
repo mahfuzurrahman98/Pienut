@@ -29,8 +29,8 @@ class AuthController extends Controller {
 
       test: {
         required: true,
-        between: [3, 6],
-        in: ['a', 'b', 'c'],
+        // between: [3, 6],
+        // in: ['a', 'b', 'c'],
         regex: [/^[a-z]+$/, 'Only alphabets are allowed'],
       },
     };

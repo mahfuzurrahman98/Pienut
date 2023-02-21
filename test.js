@@ -69,7 +69,7 @@
 
 // console.log(isNumericOrSingleChar(1.35));
 
-// console.log(isNaN('135'));
+// console.log(Number.isInteger(135.2));
 
 // import validator from 'validator';
 
@@ -78,10 +78,21 @@
 // x = validator.isDate('2019-01-01 12:45:00', { format: 'YYYY-MM-DD HH:mm:ss' });
 // console.log(x);
 
-function print(x) {
-  console.log(x);
-}
+// function print(x) {
+//   console.log(x);
+// }
 
-let regex = /^[a-z]+$/;
+// let regex = /^[a-z]+$/;
 
-print(regex);
+// print(regex);
+
+let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+let email = '78testgmadil.com';
+//Execution
+// if (email.match(regex)) {
+//   console.log('valid');
+// } else {
+//   console.log('Invalid');
+// }
+
+console.log(email.match(regex));
