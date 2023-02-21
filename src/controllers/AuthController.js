@@ -18,8 +18,8 @@ class AuthController extends Controller {
       email: {
         // required: [true, 'Email is mandatory'],
         required: true,
-        isEmail: [true, 'Email format is invalid'],
-        isUnique: [['users', 'email'], 'Email is already taken'],
+        email: [true, 'Email format is invalid'],
+        unique: [['users', 'email'], 'Email is already taken'],
       },
       // password: {
       //   required: [true, 'Password is mandatory'],
@@ -30,6 +30,8 @@ class AuthController extends Controller {
       test: {
         required: true,
         between: [3, 6],
+        in: ['a', 'b', 'c'],
+        regex: [/^[a-z]+$/, 'Only alphabets are allowed'],
       },
     };
     const validator = new Validator(rules);

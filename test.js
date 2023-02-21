@@ -36,35 +36,52 @@
 // // params = [0, 100];
 // console.log(params.length);
 
-function validateParams(params) {
-  if (
-    Array.isArray(params) &&
-    params.length === 2 &&
-    typeof params[0] === 'number' &&
-    typeof params[1] === 'number'
-  ) {
-    return [params, ''];
-  } else if (
-    Array.isArray(params) &&
-    params.length === 2 &&
-    Array.isArray(params[0]) &&
-    typeof params[1] === 'string' &&
-    params[0].length === 2 &&
-    typeof params[0][0] === 'number' &&
-    typeof params[0][1] === 'number'
-  ) {
-    return params;
-  } else {
-    return 'error';
-  }
+// function validateParams(params) {
+//   if (
+//     Array.isArray(params) &&
+//     params.length === 2 &&
+//     typeof params[0] === 'number' &&
+//     typeof params[1] === 'number'
+//   ) {
+//     return [params, ''];
+//   } else if (
+//     Array.isArray(params) &&
+//     params.length === 2 &&
+//     Array.isArray(params[0]) &&
+//     typeof params[1] === 'string' &&
+//     params[0].length === 2 &&
+//     typeof params[0][0] === 'number' &&
+//     typeof params[0][1] === 'number'
+//   ) {
+//     return params;
+//   } else {
+//     return 'error';
+//   }
+// }
+
+// function isNumericOrSingleChar(value) {
+//   return (
+//     Number.isInteger(value) ||
+//     (typeof value === 'number' && !isNaN(value)) ||
+//     (typeof value === 'string' && value.length === 1)
+//   );
+// }
+
+// console.log(isNumericOrSingleChar(1.35));
+
+// console.log(isNaN('135'));
+
+// import validator from 'validator';
+
+// let x = validator.isDate('2019-01-01 12:45:00');
+
+// x = validator.isDate('2019-01-01 12:45:00', { format: 'YYYY-MM-DD HH:mm:ss' });
+// console.log(x);
+
+function print(x) {
+  console.log(x);
 }
 
-function isNumericOrSingleChar(value) {
-  return (
-    Number.isInteger(value) ||
-    (typeof value === 'number' && !isNaN(value)) ||
-    (typeof value === 'string' && value.length === 1)
-  );
-}
+let regex = /^[a-z]+$/;
 
-console.log(isNumericOrSingleChar(1.35));
+print(regex);

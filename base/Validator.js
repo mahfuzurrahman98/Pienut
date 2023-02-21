@@ -29,11 +29,6 @@ export default class MXpressValidator {
   }
 
   async handleRequired(params, fieldData) {
-    if (!fieldData) {
-      // fieldData isn't present, throw error
-      return 'This field is mandatory';
-    }
-
     if (!Array.isArray(params)) {
       params = [params];
     }
@@ -44,7 +39,9 @@ export default class MXpressValidator {
       // field data msut be present
       if (!fieldData) {
         // field data is not present, throw error
-        return params.length === 2 ? params[1] : 'This field is mandatory';
+        return params.length === 2 && params[1].trim() != ''
+          ? params[1]
+          : 'This field is mandatory';
       } else {
         // field data is present, return no error
         return {};
@@ -73,16 +70,18 @@ export default class MXpressValidator {
     }
 
     if (params[0] === true) {
-      // field data msut be present
+      // field data msut be an email
       if (!this.validator.isEmail(fieldData)) {
-        // field data is not present, throw error
-        return params.length === 2 ? params[1] : 'Email format is invalid';
+        // field data is not an email, throw error
+        return params.length === 2 && params[1].trim() != ''
+          ? params[1]
+          : 'Email format is invalid';
       } else {
-        // field data is present, return no error
+        // field data is an email, return no error
         return {};
       }
     } else if (params[0] === false) {
-      // field data is not mandatory, no matter if it is present or not
+      // field data is not need to be an email, no matter if it is an email or not
       return {};
     } else {
       // params[0] is not boolean
@@ -90,7 +89,67 @@ export default class MXpressValidator {
     }
   }
 
-  async handleMin(params, fieldData) {
+  async handleIsMax(params, fieldData) {
+    if (!fieldData) {
+      // fieldData isn't present, throw error
+      return 'This field is mandatory';
+    }
+
+    // params[0] is either an integer, or a float, or a single character
+    // params[1] is the custom message
+
+    if (!Array.isArray(params)) {
+      params = [params];
+    }
+
+    if (this.isNumericOrSingleChar(params[0])) {
+      // the maximum value msut be an integer or a float or a single character
+      if (fieldData > params[0]) {
+        // the value is greater than the maximum value, throw error
+        return params.length === 2 && params[1].trim() != ''
+          ? params[1]
+          : 'This field value is too large';
+      } else {
+        // the value is less or equal to the maximum value, return no error
+        return {};
+      }
+    } else {
+      // params[0] is not integer or float or single character
+      return 'Something went wrong';
+    }
+  }
+
+  async handleIsMin(params, fieldData) {
+    if (!fieldData) {
+      // fieldData isn't present, throw error
+      return 'This field is mandatory';
+    }
+
+    // params[0] is either an integer, or a float, or a single character
+    // params[1] is the custom message
+
+    if (!Array.isArray(params)) {
+      params = [params];
+    }
+
+    if (this.isNumericOrSingleChar(params[0])) {
+      // the minimum value msut be an integer or a float or a single character
+      if (fieldData < params[0]) {
+        // the value is less than the minimum value, throw error
+        return params.length === 2 && params[1].trim() != ''
+          ? params[1]
+          : 'This field value is too small';
+      } else {
+        // the value is greater or equal to the minimum value, return no error
+        return {};
+      }
+    } else {
+      // params[0] is not integer or float or single character
+      return 'Something went wrong';
+    }
+  }
+
+  async handleMinLength(params, fieldData) {
     if (!fieldData) {
       // fieldData isn't present, throw error
       return 'This field is mandatory';
@@ -107,7 +166,9 @@ export default class MXpressValidator {
       // the length msut be an integer
       if (fieldData.length < params[0]) {
         // the length is less than the minimum length, throw error
-        return params.length === 2 ? params[1] : 'This field is too short';
+        return params.length === 2 && params[1].trim() != ''
+          ? params[1]
+          : 'This field is too short';
       } else {
         // the length is greater or equal to the minimum length, return no error
         return {};
@@ -118,7 +179,7 @@ export default class MXpressValidator {
     }
   }
 
-  async handleMax(params, fieldData) {
+  async handleMaxLength(params, fieldData) {
     if (!fieldData) {
       // fieldData isn't present, throw error
       return 'This field is mandatory';
@@ -135,7 +196,9 @@ export default class MXpressValidator {
       // the length msut be an integer
       if (fieldData.length > params[0]) {
         // the length is greater than the maximum length, throw error
-        return params.length === 2 ? params[1] : 'This field is too long';
+        return params.length === 2 && params[1].trim() != ''
+          ? params[1]
+          : 'This field is too long';
       } else {
         // the length is less or equal to the maximum length, return no error
         return {};
@@ -166,66 +229,15 @@ export default class MXpressValidator {
         return {};
       } else {
         // the field data is not unique
-        return params.length === 2 ? params[1] : 'This field must be unique';
+        return params.length === 2 && params[1].trim() != ''
+          ? params[1]
+          : 'This field must be unique';
       }
     } else {
       // params[0] is not an array of length 2
       return 'Something went wrong';
     }
   }
-
-  // async handleInBetween(params, fieldData) {
-  //   // params = [[0, 100], 'This field must be in between the range'];
-  //   // params[0] is an array
-  //   // params[0][0] is the minimum value
-  //   // params[0][1] is the maximum value
-  //   // params[1] is the custom message
-
-  //   if (!Array.isArray(params)) {
-  //     // params is not even a 1D array
-  //     return 'Something went wrong';
-  //   }
-  //   // check if params is a 2D array
-  //   if (!Array.isArray(params[0])) {
-  //     // params is not a 2D array
-  //     return 'Something went wrong';
-  //   }
-
-  //   if (params[0].length < 2) {
-  //     // params[0] is an array of length less than 2
-  //     return 'Something went wrong';
-  //   }
-
-  //   if (params[0].length === 2) {
-  //     // params[0] is an array of length 2
-  //     if (
-  //       this.validator.isFloat(params[0][0]) &&
-  //       this.validator.isFloat(params[0][1])
-  //     ) {
-  //       // params[0][0] and params[0][1] are floats
-  //       if (
-  //         this.validator.isFloat(fieldData) &&
-  //         fieldData >= params[0][0] &&
-  //         fieldData <= params[0][1]
-  //       ) {
-  //         // fieldData is a float and is in between the range
-
-  //         return {};
-  //       } else {
-  //         // fieldData is not a float or is not in between the range
-  //         return params.length === 2
-  //           ? params[1]
-  //           : 'This field must be in between the range';
-  //       }
-  //     } else {
-  //       // params[0][0] and params[0][1] are not floats
-  //       return 'Something went wrong';
-  //     }
-  //   } else {
-  //     // params[0] is not an array of length 2
-  //     return 'Something went wrong';
-  //   }
-  // }
 
   async handleInBetween(params, fieldData) {
     if (!fieldData) {
@@ -274,7 +286,291 @@ export default class MXpressValidator {
       return {};
     } else {
       // fieldData is not in between the range
-      return params[1];
+      return params[1].trim() != ''
+        ? params[1]
+        : `This field must be in between ${params[0][0]} and ${params[0][1]}`;
+    }
+  }
+
+  async handleIsNumber(params, fieldData) {
+    if (!fieldData) {
+      // fieldData isn't present, throw error
+      return 'This field is mandatory';
+    }
+
+    if (!Array.isArray(params)) {
+      params = [params];
+    }
+
+    if (!isNaN(fieldData) && isFinite(fieldData)) {
+      // fieldData is a number, no error
+      return {};
+    } else {
+      // fieldData is not a number
+      return params.length === 2 && params[1].trim() != ''
+        ? params[1]
+        : 'This field must be a number';
+    }
+  }
+
+  async handleIsFloat(params, fieldData) {
+    if (!fieldData) {
+      // fieldData isn't present, throw error
+      return 'This field is mandatory';
+    }
+
+    if (!Array.isArray(params)) {
+      params = [params];
+    }
+
+    if (
+      Number(fieldData) === fieldData &&
+      fieldData % 1 !== 0 &&
+      typeof fieldData === 'number'
+    ) {
+      // fieldData is a float, no error
+      return {};
+    } else {
+      // fieldData is not a float
+      return params.length === 2 && params[1].trim() != ''
+        ? params[1]
+        : 'This field must be a float';
+    }
+  }
+
+  async handleIsInteger(params, fieldData) {
+    if (!fieldData) {
+      // fieldData isn't present, throw error
+      return 'This field is mandatory';
+    }
+
+    if (!Array.isArray(params)) {
+      params = [params];
+    }
+
+    if (Number.isInteger(fieldData)) {
+      // fieldData is an integer, no error
+      return {};
+    } else {
+      // fieldData is not an integer
+      return params.length === 2 && params[1].trim() != ''
+        ? params[1]
+        : 'This field must be an integer';
+    }
+  }
+
+  async handleIsBoolean(params, fieldData) {
+    if (!fieldData) {
+      // fieldData isn't present, throw error
+      return 'This field is mandatory';
+    }
+
+    if (!Array.isArray(params)) {
+      params = [params];
+    }
+
+    if (typeof fieldData === 'boolean') {
+      // fieldData is a boolean, no error
+      return {};
+    } else {
+      // fieldData is not a boolean
+      return params.length === 2 && params[1].trim() != ''
+        ? params[1]
+        : 'This field must be a boolean';
+    }
+  }
+
+  async handleIsString(params, fieldData) {
+    if (!fieldData) {
+      // fieldData isn't present, throw error
+      return 'This field is mandatory';
+    }
+
+    if (!Array.isArray(params)) {
+      params = [params];
+    }
+
+    if (typeof fieldData === 'string') {
+      // fieldData is a string, no error
+      return {};
+    } else {
+      // fieldData is not a string
+      return params.length === 2 && params[1].trim() != ''
+        ? params[1]
+        : 'This field must be a string';
+    }
+  }
+
+  async handleIsCharacter(params, fieldData) {
+    if (!fieldData) {
+      // fieldData isn't present, throw error
+      return 'This field is mandatory';
+    }
+
+    if (!Array.isArray(params)) {
+      params = [params];
+    }
+
+    if (typeof fieldData === 'string' && fieldData.length === 1) {
+      // fieldData is a char, no error
+      return {};
+    } else {
+      // fieldData is not a char
+      return params.length === 2 && params[1].trim() != ''
+        ? params[1]
+        : 'This field must be a char';
+    }
+  }
+
+  async handleIsAlpha(params, fieldData) {
+    if (!fieldData) {
+      // fieldData isn't present, throw error
+      return 'This field is mandatory';
+    }
+
+    if (!Array.isArray(params)) {
+      params = [params];
+    }
+
+    if (typeof fieldData === 'string' && fieldData.match(/^[a-zA-Z]+$/)) {
+      // fieldData is a string of alphabets, no error
+      return {};
+    } else {
+      // fieldData is not a string of alphabets
+      return params.length === 2 && params[1].trim() != ''
+        ? params[1]
+        : 'This field must be a string of alphabets';
+    }
+  }
+
+  async handleIsNeumeric(params, fieldData) {
+    if (!fieldData) {
+      // fieldData isn't present, throw error
+      return 'This field is mandatory';
+    }
+
+    if (!Array.isArray(params)) {
+      params = [params];
+    }
+
+    if (!isNaN(parseFloat(fieldData))) {
+      // fieldData is a string of numbers, no error
+      return {};
+    } else {
+      // fieldData is not a string of numbers
+      return params.length === 2 && params[1].trim() != ''
+        ? params[1]
+        : 'This field must be a string of numbers';
+    }
+  }
+
+  async handleIsAlphanumeric(params, fieldData) {
+    if (!fieldData) {
+      // fieldData isn't present, throw error
+      return 'This field is mandatory';
+    }
+
+    if (!Array.isArray(params)) {
+      params = [params];
+    }
+
+    if (typeof fieldData === 'string' && fieldData.match(/^[a-zA-Z0-9]+$/)) {
+      // fieldData is a string of alphabets and numbers, no error
+      return {};
+    } else {
+      // fieldData is not a string of alphabets and numbers
+      return params.length === 2 && params[1].trim() != ''
+        ? params[1]
+        : 'This field must be a string of alphabets and numbers';
+    }
+  }
+
+  async handleIsIn(params, fieldData) {
+    if (!fieldData) {
+      // fieldData isn't present, throw error
+      return 'This field is mandatory';
+    }
+
+    if (
+      Array.isArray(params) &&
+      Array.isArray(params[0]) &&
+      typeof params[1] === 'string'
+    ) {
+      // params has both array and message
+      params = params;
+    } else if (Array.isArray(params)) {
+      // params has only array
+      params = [params[0], 'This field value is not expected'];
+    } else {
+      // params is not an array
+      return 'Invalid parameters';
+    }
+
+    if (params[0].includes(fieldData)) {
+      // fieldData is in the array, no error
+      return {};
+    } else {
+      // fieldData is not in the array
+      return params[1].trim() != ''
+        ? params[1]
+        : 'This field value is not expected';
+    }
+  }
+
+  async handleIsNotIn(params, fieldData) {
+    if (!fieldData) {
+      // fieldData isn't present, throw error
+      return 'This field is mandatory';
+    }
+
+    if (
+      Array.isArray(params) &&
+      Array.isArray(params[0]) &&
+      typeof params[1] === 'string'
+    ) {
+      // params has both array and message
+      params = params;
+    } else if (Array.isArray(params)) {
+      // params has only array
+      params = [params[0], 'This field value is not expected'];
+    } else {
+      // params is not an array
+      return 'Invalid parameters';
+    }
+
+    if (!params[0].includes(fieldData)) {
+      // fieldData is not in the array, no error
+      return {};
+    } else {
+      // fieldData is not in the array
+      return params[1].trim() != ''
+        ? params[1]
+        : 'This field value is not expected';
+    }
+  }
+
+  async handleIsRegex(params, fieldData) {
+    if (!fieldData) {
+      // fieldData isn't present, throw error
+      return 'This field is mandatory';
+    }
+
+    if (!Array.isArray(params)) {
+      params = [params];
+    }
+
+    // params is an array
+    // params[0] is the regex
+    // params[1] is the error message
+
+    if (fieldData.match(params[0])) {
+      // fieldData matches the regex, no error
+      return {};
+    } else {
+      // fieldData does not match the regex
+      return params.length == 2 && params[1].trim() != ''
+        ? params[1]
+        : 'This field value is not expected';
     }
   }
 
@@ -282,16 +578,46 @@ export default class MXpressValidator {
     // console.log(`${attribute} | ${params} | ${fieldData}`);
     if (attribute === 'required') {
       return await this.handleRequired(params, fieldData);
-    } else if (attribute === 'isEmail') {
+    } else if (attribute === 'email') {
       return await this.handleIsEmail(params, fieldData);
     } else if (attribute === 'min') {
       return await this.handleMin(params, fieldData);
     } else if (attribute === 'max') {
       return await this.handleMax(params, fieldData);
+    } else if (attribute === 'min_len') {
+      return await this.handleMinLength(params, fieldData);
+    } else if (attribute === 'max_len') {
+      return await this.handleMaxLength(params, fieldData);
     } else if (attribute === 'between') {
       return await this.handleInBetween(params, fieldData);
-    } else if (attribute === 'isUnique') {
+    } else if (attribute === 'unique') {
       return await this.handleIsUnique(params, fieldData);
+    } else if (attribute === 'number') {
+      return await this.handleIsNumber(params, fieldData);
+    } else if (attribute === 'float') {
+      return await this.handleIsFloat(params, fieldData);
+    } else if (attribute === 'int') {
+      return await this.handleIsInteger(params, fieldData);
+    } else if (attribute === 'bool') {
+      return await this.handleIsBoolean(params, fieldData);
+    } else if (attribute === 'char') {
+      return await this.handleIsCharacter(params, fieldData);
+    } else if (attribute === 'numeric') {
+      return await this.handleIsNeumeric(params, fieldData);
+    } else if (attribute === 'string') {
+      return await this.handleIsString(params, fieldData);
+    } else if (attribute === 'date') {
+      return await this.handleIsDate(params, fieldData);
+    } else if (attribute === 'alpha') {
+      return await this.handleIsAlpha(params, fieldData);
+    } else if (attribute === 'alphanumeric') {
+      return await this.handleIsAlphanumeric(params, fieldData);
+    } else if (attribute === 'in') {
+      return await this.handleIsIn(params, fieldData);
+    } else if (attribute === 'not_in') {
+      return await this.handleIsNotIn(params, fieldData);
+    } else if (attribute === 'regex') {
+      return await this.handleIsRegex(params, fieldData);
     } else {
     }
   }
@@ -334,7 +660,10 @@ export default class MXpressValidator {
 
           // just assign the error message to the field
           if (this.emptyObject(errMsg) === false) {
-            errors[field] = errMsg;
+            // if (errors[field]) already exists, dont overwrite it
+            if (!errors[field]) {
+              errors[field] = errMsg;
+            }
           }
         }
       }
