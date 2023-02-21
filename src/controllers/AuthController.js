@@ -16,7 +16,8 @@ class AuthController extends Controller {
     // validate first
     const rules = {
       email: {
-        required: [true, 'Email is mandatory'],
+        // required: [true, 'Email is mandatory'],
+        required: true,
         isEmail: [true, 'Email format is invalid'],
         isUnique: [['users', 'email'], 'Email is already taken'],
       },
@@ -25,6 +26,11 @@ class AuthController extends Controller {
       //   minLength: [6, 'Password must be at least 6 characters'],
       //   maxLength: [20, 'Password must be at most 20 characters'],
       // },
+
+      test: {
+        required: true,
+        between: [3, 6],
+      },
     };
     const validator = new Validator(rules);
 

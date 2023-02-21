@@ -14,10 +14,57 @@
 //   console.log( ? 'no rules' : value);
 // }
 
-const errors = {
-  email: 'Email is mandatory.',
-  password: 'Password is mandatory.',
-  default: 'Something went wrong.',
-};
-let key = 'email';
-console.log(errors[key]);
+// const errors = {
+//   email: 'Email is mandatory.',
+//   password: 'Password is mandatory.',
+//   default: 'Something went wrong.',
+// };
+// let key = 'email';
+// console.log(errors[key]);
+
+// let x = true;
+
+// if (Array.isArray(x)) {
+// } else {
+//   // make it an array wth tow elements
+//   x = [x, 'Something went wrong.'];
+// }
+
+// console.log(x[0]);
+
+// let params = [[0, 100], 'This field must be in between the range'];
+// // params = [0, 100];
+// console.log(params.length);
+
+function validateParams(params) {
+  if (
+    Array.isArray(params) &&
+    params.length === 2 &&
+    typeof params[0] === 'number' &&
+    typeof params[1] === 'number'
+  ) {
+    return [params, ''];
+  } else if (
+    Array.isArray(params) &&
+    params.length === 2 &&
+    Array.isArray(params[0]) &&
+    typeof params[1] === 'string' &&
+    params[0].length === 2 &&
+    typeof params[0][0] === 'number' &&
+    typeof params[0][1] === 'number'
+  ) {
+    return params;
+  } else {
+    return 'error';
+  }
+}
+
+function isNumericOrSingleChar(value) {
+  return (
+    Number.isInteger(value) ||
+    (typeof value === 'number' && !isNaN(value)) ||
+    (typeof value === 'string' && value.length === 1)
+  );
+}
+
+console.log(isNumericOrSingleChar(1.35));
