@@ -1,9 +1,7 @@
-// import validator from 'validator';
 import Database from './Database.js';
 
 export default class MXpressValidator {
   constructor(rules) {
-    // this.validator = validator;
     this.rules = rules;
     this.db = Database.getInstance();
   }

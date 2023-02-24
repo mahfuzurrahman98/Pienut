@@ -8,6 +8,10 @@ class AuthController extends Controller {
     this.Model = User;
   }
 
+  async fun(req, res) {
+    res.send('funy');
+  }
+
   async login(req, res) {}
 
   async register(req, res) {

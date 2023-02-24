@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import Middleware from './Middleware.js';
 
 class Route {
   constructor() {
@@ -9,8 +10,15 @@ class Route {
     this.router.get(path, controller[action].bind(controller));
   }
 
-  post(path, controller, action) {
-    this.router.post(path, controller[action].bind(controller));
+  post(path, middlewares = null, controller, action) {
+    let mids = [];
+    middlewares.forEach((middleware) => {
+      let mid = Middleware.obj[middleware];
+      mids.push(mid);
+    });
+
+    console.log(Middleware.obj);
+    this.router.post(path, mids, controller[action].bind(controller));
   }
 
   put(path, controller, action) {
@@ -23,6 +31,11 @@ class Route {
 
   delete(path, controller, action) {
     this.router.delete(path, controller[action].bind(controller));
+  }
+
+  middle(action) {
+    action();
+    return this;
   }
 }
 
