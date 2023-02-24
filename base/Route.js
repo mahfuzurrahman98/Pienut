@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import Middleware from './Middleware.js';
 
 class Route {
   constructor() {
@@ -11,13 +10,13 @@ class Route {
   }
 
   post(path, middlewares = null, controller, action) {
-    let mids = [];
-    middlewares.forEach((middleware) => {
-      let mid = Middleware.obj[middleware];
-      mids.push(mid);
-    });
+    // let mids = [];
+    // middlewares.forEach((middleware) => {
+    //   let mid = Middleware.obj[middleware];
+    //   mids.push(mid);
+    // });
 
-    console.log('mss: ', Middleware);
+    console.log('mss: ', middlewares);
     this.router.post(path, controller[action].bind(controller));
   }
 
