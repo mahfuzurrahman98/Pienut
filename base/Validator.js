@@ -1,6 +1,6 @@
 import Database from './Database.js';
 
-export default class MXpressValidator {
+export default class PienutValidator {
   constructor(rules) {
     this.rules = rules;
     this.db = Database.getInstance();

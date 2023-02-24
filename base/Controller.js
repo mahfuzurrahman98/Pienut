@@ -1,5 +1,5 @@
-import errorMessageFormatter from './helpers/errorMessageFormatter.js';
-import Password from './helpers/Password.js';
+import errorMessageFormatter from './utils/errorMessageFormatter.js.js';
+import Password from './utils/Password.js';
 
 export default class Controller {
   constructor() {}

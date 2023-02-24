@@ -1,6 +1,6 @@
 import express from 'express';
 
-class MXpress {
+class Pienut {
   constructor() {
     this.app = express();
     this.app.use(express.urlencoded({ extended: false }));
@@ -16,4 +16,4 @@ class MXpress {
   }
 }
 
-export default MXpress;
+export default Pienut;

@@ -1,9 +1,17 @@
 {
-  "name": "express-mvc-oop",
+  "name": "pienut",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
+  "files": [
+    "src/**/*",
+    "server.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mahfuzurrahman98/Pienut.git"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.js"

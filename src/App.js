@@ -1,8 +1,8 @@
-import MXpress from '../base/MXpress.js';
+import Pienut from '../base/Pienut.js';
 import v1Routes from './routes/api/v1/index.js';
 
-const mxpress = new MXpress();
+const pienut = new Pienut();
 
-mxpress.useRoute('/api/v1/', v1Routes);
+pienut.useRoute('/api/v1/', v1Routes);
 
-export default mxpress.app;
+export default pienut.app;
