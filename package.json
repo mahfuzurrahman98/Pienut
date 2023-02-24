@@ -1,12 +1,10 @@
 {
   "name": "pienut",
-  "version": "1.1.2",
+  "version": "1.2.1",
   "description": "",
   "type": "module",
   "main": "base/index.js",
   "files": [
-    "src",
-    "server.js",
     "base/**/*"
   ],
   "repository": {
@@ -14,11 +12,13 @@
     "url": "git+https://github.com/mahfuzurrahman98/Pienut.git"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js"
+    "postinstall": "cp -R ./node_modules/pienut/src ./src && cp ./node_modules/pienut/server.js ./server.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "mvc",
+    "express"
+  ],
+  "author": "mahfuz98",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.0",
