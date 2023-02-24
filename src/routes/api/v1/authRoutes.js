@@ -7,6 +7,6 @@ Route.post('/login', AuthController, 'login');
 Route.post('/profile', AuthController, 'profile');
 Route.post('/logout', AuthController, 'logout');
 
-Route.post('/fun', [auth.notZero, auth.isEven], AuthController, 'fun');
+Route.post('/fun', AuthController, 'fun', [auth.notZero, auth.isEven]);
 
 export default Route.router;
