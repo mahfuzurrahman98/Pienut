@@ -1,4 +1,4 @@
-import Route from '../../../../base/Route.js';
+import { Route } from '../../../../base/index.js';
 import UserController from '../../../controllers/UserController.js';
 
 Route.get('/', UserController, 'index');

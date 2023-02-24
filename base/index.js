@@ -1,7 +1,9 @@
-export const Controller = require('./Controller.js');
-export const Model = require('./Model.js');
-export const Route = require('./Route.js');
-export const Validation = require('./Validator.js');
-export const Pienut = require('./Pienut.js');
-export const Database = require('./Database.js');
-export const Password = require('./utils/Password.js');
+import Controller from './Controller.js';
+import Model from './Model.js';
+import Pienut from './Pienut.js';
+import Route from './Route.js';
+import Password from './utils/Password.js';
+import Validator from './Validator.js';
+
+export { Controller, Model, Validator, Route, Password };
+export default Pienut;

@@ -1,5 +1,4 @@
-import Controller from '../../base/Controller.js';
-import Validator from '../../base/Validator.js';
+import { Controller, Password, Validator } from '../../base/index.js';
 import User from '../models/User.js';
 
 class AuthController extends Controller {
@@ -8,60 +7,49 @@ class AuthController extends Controller {
     this.Model = User;
   }
 
-  async fun(req, res) {
-    res.send('funy');
-  }
-
   async login(req, res) {}
 
   async register(req, res) {
-    let data = new this.Model(req.body);
+    let user = new this.Model(req.body);
 
     // validate first
     const rules = {
       email: {
-        // required: [true, 'Email is mandatory'],
         required: true,
         email: [true, 'Email format is invalid'],
         unique: [['users', 'email'], 'Email is already taken'],
       },
-      // password: {
-      //   required: [true, 'Password is mandatory'],
-      //   minLength: [6, 'Password must be at least 6 characters'],
-      //   maxLength: [20, 'Password must be at most 20 characters'],
-      // },
-
-      test: {
-        required: true,
-        // between: [3, 6],
-        // in: ['a', 'b', 'c'],
-        regex: [/^[a-z]+$/, 'Only alphabets are allowed'],
+      password: {
+        required: [true, 'Password is mandatory'],
+        min_len: [6, 'Password must be at least 6 characters'],
+        max_len: [20, 'Password must be at most 20 characters'],
       },
     };
     const validator = new Validator(rules);
-
-    const errors = await validator.run(req.body);
-    this.sendApiResponse(res, 400, errors);
-    return;
+    await validator.run(req.body);
+    console.log('validator.errors', validator.errors);
+    // if error object is not empty
+    if (!validator.isEmpty()) {
+      this.sendApiResponse(res, 400, validator.errors);
+      return;
+    }
+    console.log('firing query');
     // fire the query
     try {
-      if (data.password) {
-        // only for user creation
-        data.password = await Password.hash(data.password);
+      if (user.password) {
+        user.password = await Password.hash(user.password);
       }
-      await data.save();
-      if (data.password) {
-        // only for user creation
-        data.password = undefined;
+      await user.save();
+      if (user.password) {
+        user.password = undefined;
       }
-      this.sendApiResponse(res, 201, 'created successfully', data);
+      this.sendApiResponse(res, 201, 'created successfully', user);
     } catch (err) {
       this.sendApiResponse(res, 500, err);
     }
   }
 
   async logout(req, res) {}
-
   async profile(req, res) {}
 }
 

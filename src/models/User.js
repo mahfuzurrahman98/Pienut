@@ -1,7 +1,7 @@
 import Model from '../../base/Model.js';
 
 class User extends Model {
-  collectionName = 'u_users';
+  collectionName = 'users';
 
   // schemaObj = {
   //   name: {

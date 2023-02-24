@@ -1,13 +1,18 @@
 import Database from './Database.js';
 
-export default class PienutValidator {
+export default class Validator {
   constructor(rules) {
     this.rules = rules;
+    this.errors = {};
     this.db = Database.getInstance();
   }
 
   emptyObject(obj) {
     return Object.keys(obj).length === 0;
+  }
+
+  isEmpty() {
+    return this.emptyObject(this.errors);
   }
 
   isNumericOrSingleChar(value) {
@@ -575,6 +580,7 @@ export default class PienutValidator {
 
   async handleAttributeValidation(attribute, params, fieldData) {
     // console.log(`${attribute} | ${params} | ${fieldData}`);
+
     if (attribute === 'required') {
       return await this.handleRequired(params, fieldData);
     } else if (attribute === 'email') {
@@ -618,12 +624,11 @@ export default class PienutValidator {
     } else if (attribute === 'regex') {
       return await this.handleIsRegex(params, fieldData);
     } else {
+      throw new Error('Invalid attribute');
     }
   }
 
   async run(data) {
-    let errors = {};
-
     for (let field in this.rules) {
       // populate the constraints against the field
       const constraints = this.rules[field];
@@ -632,41 +637,36 @@ export default class PienutValidator {
         return;
       }
       for (let attribute in constraints) {
+        console.log('attribute: ' + attribute);
         // populate the [value, message] against the attribute
         if (constraints[attribute].length === 0) {
           // this attribute has no value and message to validate
-          errors['default'] = 'Something went wrong';
+          this.errors['default'] = 'Something went wrong';
         } else {
           // lets check the attribute and validate
-          const errMsg = await this.handleAttributeValidation(
-            attribute,
-            constraints[attribute],
-            data[field]
-          );
+          try {
+            const errMsg = await this.handleAttributeValidation(
+              attribute,
+              constraints[attribute],
+              data[field]
+            );
 
-          // if the error message agaist the filed is empty object, then simply assign it, else push it to the array
-          // if (this.emptyObject(errMsg) === false) {
-          //   if (errors[field]) {
-          //     if (Array.isArray(errors[field])) {
-          //       errors[field].push(errMsg);
-          //     } else {
-          //       errors[field] = [errors[field], errMsg];
-          //     }
-          //   } else {
-          //     errors[field] = errMsg;
-          //   }
-          // }
-
-          // just assign the error message to the field
-          if (this.emptyObject(errMsg) === false) {
-            // if (errors[field]) already exists, dont overwrite it
-            if (!errors[field]) {
-              errors[field] = errMsg;
+            // just assign the error message to the field
+            // console.log(attribute + ': ' + errMsg);
+            if (this.emptyObject(errMsg) === false) {
+              // if (this.errors[field]) already exists, dont overwrite it
+              if (!this.errors[field]) {
+                this.errors[field] = errMsg;
+              }
             }
+          } catch (error) {
+            console.log(error);
+            process.exit(1);
           }
         }
       }
     }
-    return errors;
+
+    console.log('x:', this.errors);
   }
 }

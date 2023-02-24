@@ -1,4 +1,3 @@
-import errorMessageFormatter from './utils/errorMessageFormatter.js.js';
 import Password from './utils/Password.js';
 
 export default class Controller {
@@ -52,12 +51,12 @@ export default class Controller {
     let data = new this.Model(req.body);
 
     // validate first
-    try {
-      await data.validate();
-    } catch (err) {
-      this.sendApiResponse(res, 400, errorMessageFormatter(err.message));
-      return;
-    }
+    // try {
+    //   await data.validate();
+    // } catch (err) {
+    //   this.sendApiResponse(res, 400, errorMessageFormatter(err.message));
+    //   return;
+    // }
 
     // fire the query
     try {
