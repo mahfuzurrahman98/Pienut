@@ -1,4 +1,3 @@
-import Middleware from '../../../../base/Middleware.js';
 import Route from '../../../../base/Route.js';
 import AuthController from '../../../controllers/AuthController.js';
 
@@ -6,23 +5,6 @@ import AuthController from '../../../controllers/AuthController.js';
 // Route.post('/login', AuthController, 'login');
 // Route.post('/profile', AuthController, 'profile');
 // Route.post('/logout', AuthController, 'logout');
-
-const notZero = (req, res, next) => {
-  if (req.body.flag == 0) {
-    return res.json({ status: false, message: 'flag is zero' });
-  }
-  next();
-};
-
-const isEven = (req, res, next) => {
-  if (req.body.flag % 2 == 1) {
-    return res.json({ status: false, message: 'flag is not even' });
-  }
-  next();
-};
-
-Middleware.register('notZero', notZero);
-Middleware.register('isEven', isEven);
 
 // is it possible to pass middleware to Route.post() and then execute it before the controller action?
 Route.post('/fun', ['notZero', 'isEven'], AuthController, 'fun');

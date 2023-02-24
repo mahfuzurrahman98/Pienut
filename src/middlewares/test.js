@@ -1,4 +1,4 @@
-export default test = {
+const test = {
   notZero: (req, res, next) => {
     if (req.body.flag == 0) {
       return res.json({ status: false, message: 'flag is zero' });
@@ -13,3 +13,5 @@ export default test = {
     next();
   },
 };
+
+export default test;

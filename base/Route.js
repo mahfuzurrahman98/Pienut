@@ -17,8 +17,8 @@ class Route {
       mids.push(mid);
     });
 
-    console.log(Middleware.obj);
-    this.router.post(path, mids, controller[action].bind(controller));
+    console.log('mss: ', Middleware);
+    this.router.post(path, controller[action].bind(controller));
   }
 
   put(path, controller, action) {
