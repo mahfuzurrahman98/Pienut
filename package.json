@@ -5,14 +5,16 @@
   "type": "module",
   "main": "base/index.js",
   "files": [
-    "base/**/*"
+    "base/**/*",
+    "src/**/*",
+    "server.js"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mahfuzurrahman98/Pienut.git"
   },
   "scripts": {
-    "postinstall": "cp -R ./node_modules/pienut/src ./src && cp ./node_modules/pienut/server.js ./server.js"
+    "postinstall": "echo 'Running postinstall script...' && cp -R ./node_modules/pienut/src ./src && cp ./node_modules/pienut/server.js ./server.js"
   },
   "keywords": [
     "mvc",
