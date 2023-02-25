@@ -6,5 +6,5 @@ const PORT = process.env.PORT || 4000;
 dotenv.config();
 
 app.listen(PORT, () => {
-  console.log(`the server is running on port ${PORT}`);
+  console.log(`Pienut dev server is running on PORT: ${PORT}`);
 });

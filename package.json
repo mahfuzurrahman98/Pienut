@@ -17,8 +17,10 @@
     "postinstall": "echo 'Running postinstall script...'"
   },
   "keywords": [
+    "pienut",
     "mvc",
-    "express"
+    "express",
+    "mvc-boilerplate"
   ],
   "author": "mahfuz98",
   "license": "ISC",
