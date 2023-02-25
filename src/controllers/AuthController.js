@@ -4,6 +4,7 @@ import User from '../models/User.js';
 class AuthController extends Controller {
   constructor() {
     super();
+    this.errors = {};
     this.Model = User;
   }
 
@@ -21,19 +22,18 @@ class AuthController extends Controller {
       },
       password: {
         required: [true, 'Password is mandatory'],
-        min_len: [6, 'Password must be at least 6 characters'],
+        min_len: [10, 'Password must be at least 10 characters'],
         max_len: [20, 'Password must be at most 20 characters'],
       },
     };
     const validator = new Validator(rules);
     await validator.run(req.body);
-    console.log('validator.errors', validator.errors);
     // if error object is not empty
-    if (!validator.isEmpty()) {
-      this.sendApiResponse(res, 400, validator.errors);
+    if (validator.fails()) {
+      this.sendApiResponse(res, 400, validator.errors());
       return;
     }
-    console.log('firing query');
+
     // fire the query
     try {
       if (user.password) {

@@ -2,8 +2,8 @@ import Database from './Database.js';
 
 export default class Validator {
   constructor(rules) {
+    this.errorMessages = {};
     this.rules = rules;
-    this.errors = {};
     this.db = Database.getInstance();
   }
 
@@ -11,8 +11,12 @@ export default class Validator {
     return Object.keys(obj).length === 0;
   }
 
-  isEmpty() {
-    return this.emptyObject(this.errors);
+  fails() {
+    return !this.emptyObject(this.errorMessages);
+  }
+
+  errors() {
+    return this.errorMessages;
   }
 
   isNumericOrSingleChar(value) {
@@ -225,8 +229,7 @@ export default class Validator {
 
     if (params[0].length === 2) {
       // params[0] is an array of length 2
-      const result = this.isUnique(params[0][0], params[0][1], fieldData);
-
+      const result = await this.isUnique(params[0][0], params[0][1], fieldData);
       if (result) {
         // the field data is unique
         return {};
@@ -629,6 +632,8 @@ export default class Validator {
   }
 
   async run(data) {
+    // let this.errorMessages = {};
+
     for (let field in this.rules) {
       // populate the constraints against the field
       const constraints = this.rules[field];
@@ -637,11 +642,10 @@ export default class Validator {
         return;
       }
       for (let attribute in constraints) {
-        console.log('attribute: ' + attribute);
         // populate the [value, message] against the attribute
         if (constraints[attribute].length === 0) {
           // this attribute has no value and message to validate
-          this.errors['default'] = 'Something went wrong';
+          this.errorMessages['default'] = 'Something went wrong';
         } else {
           // lets check the attribute and validate
           try {
@@ -652,21 +656,17 @@ export default class Validator {
             );
 
             // just assign the error message to the field
-            // console.log(attribute + ': ' + errMsg);
             if (this.emptyObject(errMsg) === false) {
-              // if (this.errors[field]) already exists, dont overwrite it
-              if (!this.errors[field]) {
-                this.errors[field] = errMsg;
+              // if (this.errorMessages[field]) already exists, dont overwrite it
+              if (!this.errorMessages[field]) {
+                this.errorMessages[field] = errMsg;
               }
             }
           } catch (error) {
-            console.log(error);
             process.exit(1);
           }
         }
       }
     }
-
-    console.log('x:', this.errors);
   }
 }

@@ -5,7 +5,6 @@ export default class Controller {
 
   // this is a helper function to refactor the json response
   sendApiResponse(res, status, message, data = null) {
-    console.log(message);
     let json = {
       success: parseInt(status / 100) == 2 ? true : false,
       status: status,
