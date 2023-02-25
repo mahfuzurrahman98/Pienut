@@ -1,29 +1,15 @@
 import { Route } from '../../../../base/index.js';
-import AuthController from '../../../controllers/AuthController.js';
+import TestController from '../../../controllers/TestController.js';
 import UserController from '../../../controllers/UserController.js';
-// import authRoutes from './authRoutes.js';
-// import userRoutes from './userRoutes.js';
+import AuthRoutes from './authRoutes.js';
 
-// const router = Route.router;
+// test routes
+Route.get('/welcome', TestController, 'index');
+Route.get('/test', TestController, 'test');
 
-// Route.use('/auth', authRoutes);
-// Route.use('/users', userRoutes);
+// auth routes
+Route.use('/auth', AuthRoutes);
 
-// Route.post('/auth/register', AuthController, 'register');
-// Route.post('/login', AuthController, 'login');
-
-// Route.post('/register', AuthController, 'register');
-//
-
-const route = new Route();
-
-route.withPrefix('/auth');
-route.post('/register', AuthController, 'register');
-route.post('/login', AuthController, 'login');
-console.log('authRoute: ', route);
-
-route.withPrefix('/users');
-route.get('/', UserController, 'index');
-console.log('userRoute: ', route);
-
-export default route;
+//user routes
+Route.get('/users', UserController, 'index');
+export default Route.router;
