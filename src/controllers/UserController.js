@@ -7,6 +7,10 @@ class UserController extends Controller {
     this.Model = User;
   }
 
+  async index(req, res) {
+    const users = await this.Model.find();
+    this.sendApiResponse(res, 200, 'user fetched ', users);
+  }
 }
 
 export default new UserController();
