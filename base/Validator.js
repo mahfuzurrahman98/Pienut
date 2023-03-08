@@ -38,6 +38,7 @@ export default class Validator {
     if (!Array.isArray(params)) {
       params = [params];
     }
+
     // params[0] is the boolean value
     // params[1] is the custom message
 
@@ -64,7 +65,7 @@ export default class Validator {
   async handleIsEmail(params, fieldData) {
     if (!fieldData) {
       // fieldData isn't present, throw error
-      return 'This field is mandatory';
+      return '';
     }
 
     // params = [true, 'Email format is invalid'];
@@ -99,7 +100,7 @@ export default class Validator {
   async handleIsMax(params, fieldData) {
     if (!fieldData) {
       // fieldData isn't present, throw error
-      return 'This field is mandatory';
+      return '';
     }
 
     // params[0] is either an integer, or a float, or a single character
@@ -129,7 +130,7 @@ export default class Validator {
   async handleIsMin(params, fieldData) {
     if (!fieldData) {
       // fieldData isn't present, throw error
-      return 'This field is mandatory';
+      return '';
     }
 
     // params[0] is either an integer, or a float, or a single character
@@ -159,7 +160,7 @@ export default class Validator {
   async handleMinLength(params, fieldData) {
     if (!fieldData) {
       // fieldData isn't present, throw error
-      return 'This field is mandatory';
+      return '';
     }
 
     // params[0] is an integer value
@@ -189,7 +190,7 @@ export default class Validator {
   async handleMaxLength(params, fieldData) {
     if (!fieldData) {
       // fieldData isn't present, throw error
-      return 'This field is mandatory';
+      return '';
     }
 
     // params[0] is an integer value
@@ -219,7 +220,7 @@ export default class Validator {
   async handleIsUnique(params, fieldData) {
     if (!fieldData) {
       // fieldData isn't present, throw error
-      return 'This field is mandatory';
+      return '';
     }
 
     // params[0] is an array
@@ -248,7 +249,7 @@ export default class Validator {
   async handleInBetween(params, fieldData) {
     if (!fieldData) {
       // fieldData isn't present, throw error
-      return 'This field is mandatory';
+      return '';
     }
 
     // params should be in the format [[min, max], 'message'] or [min, max] else it will throw an error
@@ -301,7 +302,7 @@ export default class Validator {
   async handleIsNumber(params, fieldData) {
     if (!fieldData) {
       // fieldData isn't present, throw error
-      return 'This field is mandatory';
+      return '';
     }
 
     if (!Array.isArray(params)) {
@@ -322,7 +323,7 @@ export default class Validator {
   async handleIsFloat(params, fieldData) {
     if (!fieldData) {
       // fieldData isn't present, throw error
-      return 'This field is mandatory';
+      return '';
     }
 
     if (!Array.isArray(params)) {
@@ -347,7 +348,7 @@ export default class Validator {
   async handleIsInteger(params, fieldData) {
     if (!fieldData) {
       // fieldData isn't present, throw error
-      return 'This field is mandatory';
+      return '';
     }
 
     if (!Array.isArray(params)) {
@@ -368,7 +369,7 @@ export default class Validator {
   async handleIsBoolean(params, fieldData) {
     if (!fieldData) {
       // fieldData isn't present, throw error
-      return 'This field is mandatory';
+      return '';
     }
 
     if (!Array.isArray(params)) {
@@ -389,7 +390,7 @@ export default class Validator {
   async handleIsString(params, fieldData) {
     if (!fieldData) {
       // fieldData isn't present, throw error
-      return 'This field is mandatory';
+      return '';
     }
 
     if (!Array.isArray(params)) {
@@ -410,7 +411,7 @@ export default class Validator {
   async handleIsCharacter(params, fieldData) {
     if (!fieldData) {
       // fieldData isn't present, throw error
-      return 'This field is mandatory';
+      return '';
     }
 
     if (!Array.isArray(params)) {
@@ -431,7 +432,7 @@ export default class Validator {
   async handleIsAlpha(params, fieldData) {
     if (!fieldData) {
       // fieldData isn't present, throw error
-      return 'This field is mandatory';
+      return '';
     }
 
     if (!Array.isArray(params)) {
@@ -452,7 +453,7 @@ export default class Validator {
   async handleIsNeumeric(params, fieldData) {
     if (!fieldData) {
       // fieldData isn't present, throw error
-      return 'This field is mandatory';
+      return '';
     }
 
     if (!Array.isArray(params)) {
@@ -473,7 +474,7 @@ export default class Validator {
   async handleIsAlphanumeric(params, fieldData) {
     if (!fieldData) {
       // fieldData isn't present, throw error
-      return 'This field is mandatory';
+      return '';
     }
 
     if (!Array.isArray(params)) {
@@ -494,7 +495,7 @@ export default class Validator {
   async handleIsIn(params, fieldData) {
     if (!fieldData) {
       // fieldData isn't present, throw error
-      return 'This field is mandatory';
+      return '';
     }
 
     if (
@@ -526,7 +527,7 @@ export default class Validator {
   async handleIsNotIn(params, fieldData) {
     if (!fieldData) {
       // fieldData isn't present, throw error
-      return 'This field is mandatory';
+      return '';
     }
 
     if (
@@ -558,7 +559,7 @@ export default class Validator {
   async handleIsRegex(params, fieldData) {
     if (!fieldData) {
       // fieldData isn't present, throw error
-      return 'This field is mandatory';
+      return '';
     }
 
     if (!Array.isArray(params)) {
@@ -627,13 +628,13 @@ export default class Validator {
     } else if (attribute === 'regex') {
       return await this.handleIsRegex(params, fieldData);
     } else {
-      throw new Error('Invalid attribute');
+      return `[${attribute}] is an invalid attribute`;
     }
   }
 
   async run(data) {
     // let this.errorMessages = {};
-
+    console.log('this.rules', this.rules);
     for (let field in this.rules) {
       // populate the constraints against the field
       const constraints = this.rules[field];

@@ -35,7 +35,7 @@ class Pienut {
       res.status(404).json({
         success: false,
         status: 404,
-        message: 'Route not found',
+        message: `Route [${req.path}] not found`,
       });
     });
 
