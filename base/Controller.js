@@ -22,20 +22,15 @@ export default class Controller {
 
   // show all data
   async _index(req, res) {
-    // find all data that are deletedAt is null
     let data = await this.Model.find({ deletedAt: null });
 
     if (!data || data.length == 0) {
       return this.sendApiResponse(res, 404, 'data not found');
     }
 
-    // convert the data to object
     data = data.map((item) => item.toObject());
-
-    // loop through the data and remove the hidden fields
     if (this.Model.hidden) {
       data = data.map((item) => {
-        // console.log('item:', item);
         this.Model.hidden.forEach((field) => {
           console.log('hidden fields:', field);
           delete item[field];
@@ -56,10 +51,7 @@ export default class Controller {
       return this.sendApiResponse(res, 404, 'data not found');
     }
 
-    // convert the data to object
     data = data.toObject();
-
-    // remove the hidden fields from data object
     if (this.Model.hidden) {
       this.Model.hidden.forEach((field) => {
         delete data[field];
@@ -72,7 +64,7 @@ export default class Controller {
   // store a data
   async _store(req, res) {
     let data = new this.Model(req.body);
-    // this.sendApiResponse(res, 200, '', data);
+
     if (Object.keys(this.storeValidationRules).length > 0) {
       const validator = new Validator(this.storeValidationRules);
       await validator.run(req.body);
@@ -83,16 +75,12 @@ export default class Controller {
       }
     }
 
-    // fire the query
     if (data.password) {
       // only for user creation
       data.password = await Password.hash(data.password);
     }
+
     await data.save();
-    if (data.password) {
-      // only for user creation
-      data.password = undefined;
-    }
 
     data = data.toObject();
     if (this.Model.hidden) {
@@ -113,11 +101,9 @@ export default class Controller {
       return this.sendApiResponse(res, 404, 'data not found');
     }
 
-    if (Object.keys(this.storeValidationRules).length > 0) {
-      // validate first
-      const validator = new Validator(this.storeValidationRules);
+    if (Object.keys(this.updateValidationRules).length > 0) {
+      const validator = new Validator(this.updateValidationRules);
       await validator.run(req.body);
-      // if error object is not empty
       if (validator.fails()) {
         this.sendApiResponse(res, 400, validator.errors());
         return;

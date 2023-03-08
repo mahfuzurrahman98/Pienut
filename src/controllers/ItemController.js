@@ -10,6 +10,7 @@ class ItemController extends Controller {
       name: {
         string: true,
         required: true,
+        unique: [['items', 'name'], 'Item name is already taken'],
       },
       catName: {
         string: true,

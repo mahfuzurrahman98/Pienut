@@ -27,11 +27,21 @@ export default class Validator {
     );
   }
 
-  async isUnique(collectionName, fieldName, fieldValue) {
-    const result = await this.db.connection
-      .collection(collectionName)
-      .findOne({ [fieldName]: fieldValue });
-    return !result;
+  async isUnique(collectionName, fieldName, fieldValue, id = null) {
+    if (id) {
+      const result = await this.db.connection
+        .collection(collectionName)
+        .findOne({
+          [fieldName]: fieldValue,
+          _id: { $ne: id },
+        });
+      return !result;
+    } else {
+      const result = await this.db.connection
+        .collection(collectionName)
+        .findOne({ [fieldName]: fieldValue });
+      return !result;
+    }
   }
 
   async handleRequired(params, fieldData) {
@@ -218,6 +228,7 @@ export default class Validator {
   }
 
   async handleIsUnique(params, fieldData) {
+    console.log('params', params);
     if (!fieldData) {
       // fieldData isn't present, throw error
       return '';
@@ -228,9 +239,14 @@ export default class Validator {
     // params[0][1] is the field name
     // params[1] is the custom message
 
-    if (params[0].length === 2) {
+    if (params[0].length >= 2) {
       // params[0] is an array of length 2
-      const result = await this.isUnique(params[0][0], params[0][1], fieldData);
+      const result = await this.isUnique(
+        params[0][0],
+        params[0][1],
+        fieldData,
+        params[0].length == 3 ? params[0][2] : null
+      );
       if (result) {
         // the field data is unique
         return {};
