@@ -5,18 +5,24 @@ class Route {
     this.router = Router();
   }
 
+  handler(fn) {
+    console.log('fn: ', fn);
+    function middleware(req, res, next) {
+      Promise.resolve(fn(req, res, next)).catch(next);
+    }
+    return middleware;
+  }
+
   get(path, controller, action, middlewares = []) {
     middlewares = Array.isArray(middlewares) ? middlewares : [middlewares];
     middlewares.forEach((middleware) => this.router.use(middleware));
-    this.router.get(path, controller[action].bind(controller));
+    this.router.get(path, this.handler(controller[action].bind(controller)));
   }
 
   post(path, controller, action, middlewares = []) {
-    console.log(' path: ', path);
     middlewares = Array.isArray(middlewares) ? middlewares : [middlewares];
     middlewares.forEach((middleware) => this.router.use(middleware));
-    let dd = this.router.post(path, controller[action].bind(controller));
-    console.log(dd);
+    this.router.post(path, controller[action].bind(controller));
   }
 
   put(path, controller, action, middlewares = []) {

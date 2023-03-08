@@ -1,33 +1,27 @@
 {
   "name": "pienut",
-  "version": "1.3.0",
-  "description": "",
+  "version": "1.0.0",
+  "description": "● /base directory has base-controller, base-model, database connector, and a base app instance<br> ● server.js is the entry file<br>",
+  "main": "server.js",
   "type": "module",
-  "main": "base/index.js",
-  "files": [
-    "base/**/*",
-    "src/**/*",
-    "server.js"
-  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mahfuzurrahman98/Pienut.git"
   },
-  "scripts": {
-    "postinstall": "echo 'Running postinstall script...'"
-  },
-  "keywords": [
-    "pienut",
-    "mvc",
-    "express",
-    "mvc-boilerplate"
-  ],
-  "author": "mahfuz98",
+  "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mahfuzurrahman98/Pienut/issues"
+  },
   "dependencies": {
     "bcrypt": "^5.1.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "mongoose": "^6.9.1"
-  }
+  },
+  "homepage": "https://github.com/mahfuzurrahman98/Pienut#readme"
 }

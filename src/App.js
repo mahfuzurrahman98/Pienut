@@ -4,4 +4,4 @@ const pienut = new Pienut();
 
 pienut.useRoute('/api/v1/', v1Routes);
 
-export default pienut.app;
+export default pienut;
