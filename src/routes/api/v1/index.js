@@ -11,7 +11,6 @@ Route.get('/test', TestController, '_index');
 // Route.get('/test-err', TestController, 'test2');
 
 // auth routes
-Route.use('/auth', AuthRoutes);
 
 //user routes
 Route.get('/users', UserController, '_index');
@@ -22,5 +21,7 @@ Route.delete('/users/:id', UserController, '_destroy');
 Route.get('/items', ItemController, '_index');
 Route.get('/items/:id', ItemController, '_show');
 Route.post('/items', ItemController, '_store');
+
+Route.use('/auth', AuthRoutes);
 
 export default Route.router;

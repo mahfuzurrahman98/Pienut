@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-// import mongooseUniqueValidator from 'mongoose-unique-validator';
 
 dotenv.config();
 
@@ -22,7 +21,6 @@ class Database {
           console.log(err);
         });
 
-      // mongoose.plugin(mongooseUniqueValidator);
       Database.instance = mongoose;
     }
 

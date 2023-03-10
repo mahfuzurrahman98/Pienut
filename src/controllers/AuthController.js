@@ -1,3 +1,4 @@
+import passport from 'passport';
 import { Controller, Password, Validator } from '../../base/index.js';
 import User from '../models/User.js';
 
@@ -8,7 +9,38 @@ class AuthController extends Controller {
     this.Model = User;
   }
 
-  async login(req, res) {}
+  authenticateUser = (req, res, next) => {
+    return new Promise((resolve, reject) => {
+      passport.authenticate('local', { session: true }, (err, user, info) => {
+        if (err) {
+          return reject(err);
+        }
+        if (!user) {
+          let error = new Error();
+          error.status = 401;
+          error.message = 'Invalid credentials';
+          return reject(error);
+        }
+        console.log('>> ', user.authToken);
+        resolve(user);
+      })(req, res, next);
+    });
+  };
+
+  async login(req, res, next) {
+    // try {
+    //   const user = await this.authenticateUser(req, res);
+    //   // req.session.authToken = req.user.authToken;
+    //   this.sendApiResponse(res, 200, 'logged in successfully', { user });
+    // } catch (err) {
+    //   next(err);
+    // }
+
+    // res.json({ message: 'Logged in successfully!' });
+    this.sendApiResponse(res, 200, 'logged in successfully', {
+      user: req.user,
+    });
+  }
 
   async register(req, res) {
     let user = new this.Model(req.body);
@@ -22,8 +54,7 @@ class AuthController extends Controller {
       },
       password: {
         required: [true, 'Password is mandatory'],
-        min_len: [10, 'Password must be at least 10 characters'],
-        max_len: [20, 'Password must be at most 20 characters'],
+        min_len: [6, 'Password must be at least 6 characters'],
       },
     };
     const validator = new Validator(rules);

@@ -1,7 +1,7 @@
 {
   "name": "pienut",
   "version": "1.0.0",
-  "description": "● /base directory has base-controller, base-model, database connector, and a base app instance<br> ● server.js is the entry file<br>",
+  "description": "An MVC wrapper on top of ExpressJS and Mongoose",
   "main": "server.js",
   "type": "module",
   "scripts": {
@@ -19,9 +19,13 @@
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
+    "connect-mongo": "^4.6.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "mongoose": "^6.9.1"
+    "express-session": "^1.17.3",
+    "mongoose": "^6.9.1",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0"
   },
   "homepage": "https://github.com/mahfuzurrahman98/Pienut#readme"
 }
