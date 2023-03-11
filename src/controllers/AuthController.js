@@ -1,5 +1,4 @@
-import passport from 'passport';
-import { Controller, Password, Validator } from '../../base/index.js';
+import { Auth, Controller, Password, Validator } from '../../base/index.js';
 import User from '../models/User.js';
 
 class AuthController extends Controller {
@@ -9,37 +8,51 @@ class AuthController extends Controller {
     this.Model = User;
   }
 
-  authenticateUser = (req, res, next) => {
-    return new Promise((resolve, reject) => {
-      passport.authenticate('local', { session: true }, (err, user, info) => {
-        if (err) {
-          return reject(err);
-        }
-        if (!user) {
-          let error = new Error();
-          error.status = 401;
-          error.message = 'Invalid credentials';
-          return reject(error);
-        }
-        console.log('>> ', user.authToken);
-        resolve(user);
-      })(req, res, next);
-    });
-  };
-
   async login(req, res, next) {
-    // try {
-    //   const user = await this.authenticateUser(req, res);
-    //   // req.session.authToken = req.user.authToken;
-    //   this.sendApiResponse(res, 200, 'logged in successfully', { user });
-    // } catch (err) {
-    //   next(err);
-    // }
+    let data = req.body;
 
-    // res.json({ message: 'Logged in successfully!' });
-    this.sendApiResponse(res, 200, 'logged in successfully', {
-      user: req.user,
-    });
+    const rules = {
+      email: {
+        required: true,
+        email: [true, 'Email format is invalid'],
+      },
+      password: {
+        required: [true, 'Password is mandatory'],
+        min_len: [6, 'Password must be at least 6 characters'],
+      },
+    };
+
+    const validator = new Validator(rules);
+    await validator.run(data);
+
+    if (validator.fails()) {
+      this.sendApiResponse(res, 400, validator.errors());
+      return;
+    }
+
+    // fire the query
+    let user = await User.findOne({ email: data.email });
+
+    if (!user) {
+      this.sendApiResponse(res, 404, 'User not found');
+      return;
+    }
+
+    if (!(await Password.match(data.password, user.password))) {
+      this.sendApiResponse(res, 400, 'Invalid credentials');
+      return;
+    }
+
+    const userInfo = {
+      id: user._id,
+      email: user.email,
+      name: user.name,
+      username: user.username,
+      role: user.role,
+    };
+    const accessToken = Auth.createToken(userInfo, '3m');
+
+    this.sendApiResponse(res, 200, 'logged in successfully', { accessToken });
   }
 
   async register(req, res) {
@@ -81,7 +94,10 @@ class AuthController extends Controller {
   }
 
   async logout(req, res) {}
-  async profile(req, res) {}
+
+  async profile(req, res) {
+    this.sendApiResponse(res, 200, 'profile', { user: req.user });
+  }
 }
 
 export default new AuthController();

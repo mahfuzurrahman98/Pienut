@@ -599,20 +599,19 @@ export default class Validator {
   }
 
   async handleAttributeValidation(attribute, params, fieldData) {
-    console.log(`${attribute} | ${params} | ${fieldData}`);
+    // console.log(`${attribute} | ${params} | ${fieldData}`);
 
     if (attribute === 'required') {
       return await this.handleRequired(params, fieldData);
     } else if (attribute === 'email') {
       return await this.handleIsEmail(params, fieldData);
-    } 
-    
+    }
+
     // else if (attribute === 'min') {
     //   return await this.handleMin(params, fieldData);
     // } else if (attribute === 'max') {
     //   return await this.handleMax(params, fieldData);
-    // } 
-    
+    // }
     else if (attribute === 'min_len') {
       return await this.handleMinLength(params, fieldData);
     } else if (attribute === 'max_len') {
@@ -648,7 +647,7 @@ export default class Validator {
     } else if (attribute === 'regex') {
       return await this.handleIsRegex(params, fieldData);
     } else {
-      console.log('hello error is here');
+      // console.log('hello error is here');
       return `[${attribute}] is an invalid attribute`;
     }
   }

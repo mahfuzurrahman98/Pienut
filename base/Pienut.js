@@ -1,9 +1,5 @@
-import MongoStore from 'connect-mongo';
 import dotenv from 'dotenv';
 import express from 'express';
-import session from 'express-session';
-import passport from 'passport';
-import initializePassport from './auth/passportConfig.js';
 
 class Pienut {
   constructor() {
@@ -11,22 +7,6 @@ class Pienut {
     this.app = express();
     this.app.use(express.urlencoded({ extended: false }));
     this.app.use(express.json());
-
-    initializePassport(passport);
-
-    this.app.use(
-      session({
-        secret: process.env.SESSION_SECRET || 'secret',
-        resave: false,
-        saveUninitialized: false,
-        store: MongoStore.create({
-          mongoUrl: process.env.DB_URL,
-          collectionName: 'sessions',
-        }),
-      })
-    );
-    this.app.use(passport.initialize());
-    this.app.use(passport.session());
 
     // Initialize empty arrays to store middleware and routes
     this.middlewareStack = [];
@@ -67,16 +47,16 @@ class Pienut {
         return next(err);
       }
       if (err) {
-        console.log('stack:', err.stack);
+        console.log('error:', err);
         const appDebug =
           process.env.APP_DEBUG.toLowerCase() == 'true' ? true : false;
 
         let statusCode = err.status || 500;
-        let errorMessage = '';
+        let errorMessage = {};
 
         if (parseInt(statusCode / 100) == 5) {
           // internal server error, show it only in debug mode
-          errorMessage = appDebug ? err : 'Internal server error';
+          errorMessage = appDebug ? err.message : 'Internal server error';
         } else {
           // other errors, show the message
           errorMessage = err.message;
