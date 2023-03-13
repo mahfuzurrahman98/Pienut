@@ -1,4 +1,4 @@
-import Model from '../../base/Model.js';
+import Model from '../../base/index.js';
 
 class Item extends Model {
   collectionName = 'items';

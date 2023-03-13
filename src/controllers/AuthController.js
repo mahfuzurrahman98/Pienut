@@ -34,7 +34,7 @@ class AuthController extends Controller {
     let user = await User.findOne({ email: data.email });
 
     if (!user) {
-      this.sendApiResponse(res, 404, 'User not found');
+      this.sendApiResponse(res, 400, 'Invalid credentials');
       return;
     }
 
@@ -50,9 +50,14 @@ class AuthController extends Controller {
       username: user.username,
       role: user.role,
     };
-    const accessToken = Auth.createToken(userInfo, '3m');
 
-    this.sendApiResponse(res, 200, 'logged in successfully', { accessToken });
+    const _accessToken = await Auth.createAccessToken(userInfo, '3m');
+    const _refreshToken = await Auth.createRefreshToken(userInfo, '1h', res);
+
+    this.sendApiResponse(res, 200, 'logged in successfully', {
+      _accessToken,
+      _refreshToken,
+    });
   }
 
   async register(req, res) {
@@ -60,6 +65,15 @@ class AuthController extends Controller {
 
     // validate first
     const rules = {
+      name: {
+        string: [true, 'Name must be a string'],
+        required: [true, 'Name is required'],
+      },
+      username: {
+        string: [true, 'Name must be a string'],
+        required: [true, 'Userame is required'],
+        unique: [['users', 'username'], 'Username is already taken'],
+      },
       email: {
         required: true,
         email: [true, 'Email format is invalid'],
@@ -93,7 +107,44 @@ class AuthController extends Controller {
     }
   }
 
-  async logout(req, res) {}
+  async getRefreshToken(req, res) {
+    const cookieToken = req.cookies.refreshtoken;
+
+    // No token,
+    if (!cookieToken) {
+      this.sendApiResponse(res, 401, 'No token provided');
+    }
+
+    // We have a token, let's verify it!
+    const payload = await Auth.verifyRefreshToken(cookieToken);
+    if (!payload) {
+      this.sendApiResponse(res, 401, 'Expired token');
+    }
+
+    // token is valid, check if user exist
+    const user = await User.findById(payload.id);
+    if (!user) {
+      this.sendApiResponse(res, 401, 'User not found');
+    }
+
+    // user exist, check if refreshtoken exist on user
+    if (!(await Auth.tokenExists(user, cookieToken))) {
+      this.sendApiResponse(res, 401, 'Refresh token does not exist');
+    }
+
+    // token exist, create new Refresh- and accesstoken
+    const accessToken = await Auth.createAccessToken(user, '3m');
+    const refreshToken = await Auth.createRefreshToken(user, '1h', res);
+
+    this.sendApiResponse(res, 200, 'Refreshed token', {
+      accessToken,
+      refreshToken,
+    });
+  }
+
+  async logout(req, res) {
+    const cookieToken = req.cookies.refreshtoken;
+  }
 
   async profile(req, res) {
     this.sendApiResponse(res, 200, 'profile', { user: req.user });

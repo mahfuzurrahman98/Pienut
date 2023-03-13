@@ -1,4 +1,4 @@
-import Model from '../../base/Model.js';
+import { Model } from '../../base/index.js';
 
 class User extends Model {
   collectionName = 'users';
@@ -10,7 +10,7 @@ class User extends Model {
     },
     username: {
       type: String,
-      required: true,
+      required: [true, 'Username is required'],
       unique: true,
     },
     email: {
