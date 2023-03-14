@@ -53,7 +53,7 @@ class AuthController extends Controller {
 
     const _accessToken = await Auth.createAccessToken(userInfo, '3m');
     const _refreshToken = await Auth.createRefreshToken(userInfo, '1h', res);
-
+    // console.log('cookies: ', res.cookies);
     this.sendApiResponse(res, 200, 'logged in successfully', {
       _accessToken,
       _refreshToken,
@@ -136,6 +136,7 @@ class AuthController extends Controller {
     const accessToken = await Auth.createAccessToken(user, '3m');
     const refreshToken = await Auth.createRefreshToken(user, '1h', res);
 
+    console.log('res: ', res);
     this.sendApiResponse(res, 200, 'Refreshed token', {
       accessToken,
       refreshToken,
@@ -143,7 +144,14 @@ class AuthController extends Controller {
   }
 
   async logout(req, res) {
-    const cookieToken = req.cookies.refreshtoken;
+    const cookieToken = req.cookies;
+    console.log('cookieToken:', cookieToken);
+    // res.clearCookie('refreshtoken', { path: '/refresh_token' });
+
+    // console.log(req.user);
+    this.sendApiResponse(res, 200, 'logged out successfully', {
+      cookieToken,
+    });
   }
 
   async profile(req, res) {

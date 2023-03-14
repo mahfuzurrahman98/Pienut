@@ -15,19 +15,18 @@ export default {
     const token = jwt.sign(
       { user },
       process.env.REFRESH_TOKEN_SECRET || 'prsecret',
-      {
-        expiresIn,
-      }
+      { expiresIn }
     );
 
     const refreshToken = await RefreshToken.findOne({ userId: user.id });
+    // console.log('refreshToken: ', user);
     if (refreshToken) {
       refreshToken.tokens.push({ token });
       await refreshToken.save();
     } else {
       await RefreshToken.create({
-        userId: user._id,
-        tokens: [token],
+        userId: user.id,
+        tokens: [{ token }],
       });
     }
     res.cookie('refreshtoken', token, {
