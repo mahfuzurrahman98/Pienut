@@ -1,4 +1,3 @@
-import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import express from 'express';
 
@@ -8,7 +7,6 @@ class Pienut {
     this.app = express();
     this.app.use(express.urlencoded({ extended: false }));
     this.app.use(express.json());
-    this.app.use(cookieParser());
 
     // Initialize empty arrays to store middleware and routes
     this.middlewareStack = [];

@@ -11,32 +11,34 @@ export default {
     });
   },
 
-  createRefreshToken: async (user, expiresIn, res) => {
+  createRefreshToken: async (res, user, expiresIn, path) => {
+    // console.log('user:', user, 'expiresIn:', expiresIn, 'path:', path);
     const token = jwt.sign(
       { user },
       process.env.REFRESH_TOKEN_SECRET || 'prsecret',
       { expiresIn }
     );
 
-    const refreshToken = await RefreshToken.findOne({ userId: user.id });
-    // console.log('refreshToken: ', user);
-    if (refreshToken) {
-      refreshToken.tokens.push({ token });
-      await refreshToken.save();
-    } else {
-      await RefreshToken.create({
-        userId: user.id,
-        tokens: [{ token }],
-      });
-    }
-    res.cookie('refreshtoken', token, {
-      httpOnly: true,
-      path: '/refresh_token',
-    });
+    // const refreshToken = await RefreshToken.findOne({ userId: user.id });
+    // if (refreshToken) {
+    //   refreshToken.tokens.push({ token });
+    //   await refreshToken.save();
+    // } else {
+    //   await RefreshToken.create({
+    //     userId: user.id,
+    //     tokens: [{ token }],
+    //   });
+    // }
+
+    // res.cookie('refreshtoken', token, {
+    //   httpOnly: true,
+    //   path,
+    // });
+
     return token;
   },
 
-  verify(token, secret) {
+  verifyToken(token, secret) {
     return jwt.verify(token, secret);
   },
 

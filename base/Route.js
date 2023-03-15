@@ -1,8 +1,10 @@
+import cookieParser from 'cookie-parser';
 import { Router } from 'express';
 
 class Route {
   constructor() {
     this.router = Router();
+    this.router.use(cookieParser());
   }
 
   handler(fn) {
