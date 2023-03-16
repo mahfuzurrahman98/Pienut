@@ -11,29 +11,31 @@ export default {
     });
   },
 
-  createRefreshToken: async (res, user, expiresIn, path) => {
-    // console.log('user:', user, 'expiresIn:', expiresIn, 'path:', path);
+  createRefreshToken: async (res, user, cookieOptions) => {
+    // init cookieOptions if not set
+    cookieOptions.httpOnly = cookieOptions.httpOnly || true;
+    cookieOptions.path = cookieOptions.path || '/';
+    cookieOptions.maxAge = cookieOptions.maxAge || 1 * 24 * 60 * 60 * 1000; // 1 day
+
+    const expiresIn = cookieOptions.maxAge;
     const token = jwt.sign(
       { user },
       process.env.REFRESH_TOKEN_SECRET || 'prsecret',
       { expiresIn }
     );
 
-    // const refreshToken = await RefreshToken.findOne({ userId: user.id });
-    // if (refreshToken) {
-    //   refreshToken.tokens.push({ token });
-    //   await refreshToken.save();
-    // } else {
-    //   await RefreshToken.create({
-    //     userId: user.id,
-    //     tokens: [{ token }],
-    //   });
-    // }
+    const refreshToken = await RefreshToken.findOne({ userId: user.id });
+    if (refreshToken) {
+      refreshToken.tokens.push({ token });
+      await refreshToken.save();
+    } else {
+      await RefreshToken.create({
+        userId: user.id,
+        tokens: [{ token }],
+      });
+    }
 
-    // res.cookie('refreshtoken', token, {
-    //   httpOnly: true,
-    //   path,
-    // });
+    res.cookie('refreshtoken', token, cookieOptions);
 
     return token;
   },

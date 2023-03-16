@@ -98,7 +98,17 @@ class AuthController extends Controller {
     };
 
     const _accessToken = await Auth.createAccessToken(userInfo, '3m');
-    const _refreshToken = await Auth.createRefreshToken(userInfo, '1h', res);
+
+    const cookieOptions = {
+      httpOnly: true,
+      path: '/api/v1/auth/refresh-token',
+      maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
+    };
+    const _refreshToken = await Auth.createRefreshToken(
+      res,
+      userInfo,
+      cookieOptions
+    );
     // console.log('cookies: ', res.cookies);
     return this.sendApiResponse(res, 200, 'logged in successfully', {
       _accessToken,
@@ -108,7 +118,7 @@ class AuthController extends Controller {
 
   async getRefreshToken(req, res) {
     const cookieToken = req.cookies.refreshtoken;
-    // console.log('Cookies: ', req);
+    console.log('Cookies: ', req.cookies);
     // No token,
     if (!cookieToken) {
       return this.sendApiResponse(res, 401, 'No token provided');
@@ -136,11 +146,16 @@ class AuthController extends Controller {
 
     // token exist, create new Refresh- and accesstoken
     const accessToken = await Auth.createAccessToken(user, '3m');
+
+    const cookieOptions = {
+      httpOnly: true,
+      path: '/api/v1/auth/refresh-token',
+      maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
+    };
     const refreshToken = await Auth.createRefreshToken(
       res,
       user,
-      '1h',
-      '/api/v1/auth/refresh-token'
+      cookieOptions
     );
 
     return this.sendApiResponse(res, 200, 'Refreshed token', {
@@ -152,12 +167,10 @@ class AuthController extends Controller {
   async logout(req, res) {
     const cookieToken = req.cookies;
     console.log('cookieToken:', cookieToken);
-    // res.clearCookie('refreshtoken', { path: '/refresh_token' });
+    res.clearCookie('refreshtoken', { path: '/api/v1/auth/refresh-token' });
 
     // console.log(req.user);
-    return this.sendApiResponse(res, 200, 'logged out successfully', {
-      cookieToken,
-    });
+    return this.sendApiResponse(res, 200, 'logged out successfully');
   }
 
   async profile(req, res) {
