@@ -1,13 +1,12 @@
 import { Route } from '../../../../base/index.js';
 // import ItemController from '../../../controllers/ItemController.js';
-// import UserController from '../../../controllers/UserController.js';
-import AuthRoutes from './authRoutes.js';
+import authRoutes from './authRoutes.js';
 
 // auth routes
-Route.use('/auth', AuthRoutes);
+Route.use('/auth', authRoutes);
 
-// // user routes
-// Route.get('/users', UserController, '_index');
+// user routes
+// Route.use('/users', userRoutes);
 // Route.get('/users/:id', UserController, '_show');
 // Route.delete('/users/:id', UserController, '_destroy');
 

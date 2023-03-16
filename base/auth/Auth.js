@@ -4,14 +4,14 @@ import RefreshToken from './RefreshToken.js';
 
 dotenv.config();
 
-export default {
-  createAccessToken: async (user, expiresIn) => {
+class Auth {
+  static async createAccessToken(user, expiresIn) {
     return jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET || 'pasecret', {
       expiresIn,
     });
-  },
+  }
 
-  createRefreshToken: async (res, user, cookieOptions) => {
+  static async createRefreshToken(res, user, cookieOptions) {
     // init cookieOptions if not set
     cookieOptions.httpOnly = cookieOptions.httpOnly || true;
     cookieOptions.path = cookieOptions.path || '/';
@@ -38,46 +38,52 @@ export default {
     res.cookie('refreshtoken', token, cookieOptions);
 
     return token;
-  },
+  }
 
-  verifyToken(token, secret) {
+  static verifyToken(token, secret) {
     return jwt.verify(token, secret);
-  },
+  }
 
-  tokenExists: async (userId, token) => {
+  static async tokenExists(userId, token) {
     const refreshToken = await RefreshToken.findOne({
       userId,
       tokens: { $elemMatch: { token } },
     });
     return refreshToken ? true : false;
-  },
+  }
 
-  isAuthenticated: (req, res, next) => {
-    let token = '';
-    let authHeader = req.headers.authorization || req.headers.Authorization;
+  static isAuthenticated(req, res, next) {
+    let token = req.headers.authorization || req.headers.Authorization;
 
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      token = authHeader.split(' ')[1];
-
-      try {
-        const decoded = this.verify(token, process.env.ACCESS_TOKEN_SECRET);
-        req.user = decoded.user;
-        next();
-      } catch (err) {
-        return res.status(401).json({
-          success: false,
-          status: 401,
-          message: 'Unauthorizedz',
-        });
-      }
-
-      if (!token) {
-        return res.status(401).json({
-          success: false,
-          status: 401,
-          message: 'Unauthorizedx',
-        });
-      }
+    if (token && token.startsWith('Bearer ')) {
+      token = token.split(' ')[1];
     }
-  },
-};
+
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        status: 401,
+        message: 'Unauthorizedx',
+      });
+    }
+
+    console.log('token:' + token);
+    try {
+      const decoded = Auth.verifyToken(
+        token,
+        process.env.ACCESS_TOKEN_SECRET || 'pasecret'
+      );
+      // req.user = decoded.user;
+      console.log('decoded: ' + decoded);
+      next();
+    } catch (err) {
+      return res.status(401).json({
+        success: false,
+        status: 401,
+        message: err.message,
+      });
+    }
+  }
+}
+
+export default Auth;

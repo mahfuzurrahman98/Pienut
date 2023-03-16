@@ -97,7 +97,7 @@ class AuthController extends Controller {
       role: user.role,
     };
 
-    const _accessToken = await Auth.createAccessToken(userInfo, '3m');
+    const _accessToken = await Auth.createAccessToken(userInfo, '7m');
 
     const cookieOptions = {
       httpOnly: true,
@@ -118,7 +118,7 @@ class AuthController extends Controller {
 
   async getRefreshToken(req, res) {
     const cookieToken = req.cookies.refreshtoken;
-    console.log('Cookies: ', req.cookies);
+    // console.log('Cookies: ', req.cookies);
     // No token,
     if (!cookieToken) {
       return this.sendApiResponse(res, 401, 'No token provided');
@@ -134,7 +134,7 @@ class AuthController extends Controller {
     }
 
     // token is valid, check if user exist
-    const user = await User.findById(payload.user.id);
+    const user = await User.findById(payload.user._id);
     if (!user) {
       return this.sendApiResponse(res, 401, 'User not found');
     }
@@ -145,7 +145,7 @@ class AuthController extends Controller {
     }
 
     // token exist, create new Refresh- and accesstoken
-    const accessToken = await Auth.createAccessToken(user, '3m');
+    const accessToken = await Auth.createAccessToken(user, '7m');
 
     const cookieOptions = {
       httpOnly: true,
@@ -165,11 +165,7 @@ class AuthController extends Controller {
   }
 
   async logout(req, res) {
-    const cookieToken = req.cookies;
-    console.log('cookieToken:', cookieToken);
     res.clearCookie('refreshtoken', { path: '/api/v1/auth/refresh-token' });
-
-    // console.log(req.user);
     return this.sendApiResponse(res, 200, 'logged out successfully');
   }
 
