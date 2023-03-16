@@ -118,7 +118,7 @@ class AuthController extends Controller {
 
   async getRefreshToken(req, res) {
     const cookieToken = req.cookies.refreshtoken;
-    // console.log('Cookies: ', req.cookies);
+
     // No token,
     if (!cookieToken) {
       return this.sendApiResponse(res, 401, 'No token provided');
