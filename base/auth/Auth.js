@@ -13,9 +13,15 @@ class Auth {
 
   static async createRefreshToken(res, user, cookieOptions) {
     // init cookieOptions if not set
-    cookieOptions.httpOnly = cookieOptions.httpOnly || true;
-    cookieOptions.path = cookieOptions.path || '/';
-    cookieOptions.maxAge = cookieOptions.maxAge || 1 * 24 * 60 * 60 * 1000; // 1 day
+    if ('httpOnly' in cookieOptions === false) {
+      cookieOptions.httpOnly = true;
+    }
+    if ('path' in cookieOptions === false) {
+      cookieOptions.path = '/';
+    }
+    if ('maxAge' in cookieOptions === false) {
+      cookieOptions.maxAge = 1 * 24 * 60 * 60 * 1000; // 1 day
+    }
 
     const expiresIn = cookieOptions.maxAge;
     const token = jwt.sign(
@@ -24,13 +30,13 @@ class Auth {
       { expiresIn }
     );
 
-    const refreshToken = await RefreshToken.findOne({ userId: user.id });
+    const refreshToken = await RefreshToken.findOne({ userId: user._id });
     if (refreshToken) {
       refreshToken.tokens.push({ token });
       await refreshToken.save();
     } else {
       await RefreshToken.create({
-        userId: user.id,
+        userId: user._id,
         tokens: [{ token }],
       });
     }
@@ -69,12 +75,12 @@ class Auth {
 
     console.log('token:' + token);
     try {
-      const decoded = Auth.verifyToken(
+      const decoded = jwt.verify(
         token,
         process.env.ACCESS_TOKEN_SECRET || 'pasecret'
       );
-      // req.user = decoded.user;
-      console.log('decoded: ' + decoded);
+      req.user = decoded.user;
+      console.log('decoded: ' + decoded.user);
       next();
     } catch (err) {
       return res.status(401).json({

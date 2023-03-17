@@ -1,3 +1,5 @@
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 
@@ -5,8 +7,9 @@ class Pienut {
   constructor() {
     dotenv.config();
     this.app = express();
-    this.app.use(express.urlencoded({ extended: false }));
+    this.app.use(cookieParser());
     this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: false }));
 
     // Initialize empty arrays to store middleware and routes
     this.middlewareStack = [];
@@ -19,6 +22,10 @@ class Pienut {
 
   useMiddleware(middleware) {
     this.middlewareStack.push(middleware);
+  }
+
+  useCors(corsOptions) {
+    this.app.use(cors(corsOptions));
   }
 
   start() {

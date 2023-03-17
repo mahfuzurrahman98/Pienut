@@ -81,6 +81,8 @@ class AuthController extends Controller {
     // fire the query
     let user = await User.findOne({ email: data.email });
 
+    console.log('logging in user: ', user);
+
     if (!user) {
       return this.sendApiResponse(res, 400, 'Invalid credentials');
     }
@@ -90,14 +92,16 @@ class AuthController extends Controller {
     }
 
     const userInfo = {
-      id: user._id,
+      _id: user._id,
       email: user.email,
       name: user.name,
       username: user.username,
       role: user.role,
     };
 
-    const _accessToken = await Auth.createAccessToken(userInfo, '7m');
+    console.log('userInfo: ', userInfo);
+
+    const _accessToken = await Auth.createAccessToken(userInfo, '15m');
 
     const cookieOptions = {
       httpOnly: true,
@@ -109,19 +113,23 @@ class AuthController extends Controller {
       userInfo,
       cookieOptions
     );
-    // console.log('cookies: ', res.cookies);
+
     return this.sendApiResponse(res, 200, 'logged in successfully', {
-      _accessToken,
-      _refreshToken,
+      accessToken: _accessToken,
+      refreshToken: _refreshToken,
     });
   }
 
   async getRefreshToken(req, res) {
     const cookieToken = req.cookies.refreshtoken;
+    console.log('cookies:', req.cookies);
 
     // No token,
     if (!cookieToken) {
-      return this.sendApiResponse(res, 401, 'No token provided');
+      // return this.sendApiResponse(res, 401, 'No token provided');
+      return this.sendApiResponse(res, 200, 'No token provided', {
+        accessToken: '',
+      });
     }
 
     // We have a token, let's verify it!
@@ -134,6 +142,7 @@ class AuthController extends Controller {
     }
 
     // token is valid, check if user exist
+    console.log('payload:', payload);
     const user = await User.findById(payload.user._id);
     if (!user) {
       return this.sendApiResponse(res, 401, 'User not found');
@@ -145,7 +154,7 @@ class AuthController extends Controller {
     }
 
     // token exist, create new Refresh- and accesstoken
-    const accessToken = await Auth.createAccessToken(user, '7m');
+    const accessToken = await Auth.createAccessToken(user, '15m');
 
     const cookieOptions = {
       httpOnly: true,
