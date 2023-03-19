@@ -1,10 +1,24 @@
 import Database from './Database.js';
 
 export default class Validator {
+
   constructor(rules) {
     this.errorMessages = {};
     this.rules = rules;
     this.db = Database.getInstance();
+    this.availableTypes = {
+      'string': 'handleIsString',
+      'number': 'handleIsNumber',
+      'char': 'handleIsCharacter',
+      'int': 'handleIsInteger',
+      'float': 'handleIsFloat',
+      'bool': 'handleIsBoolean',
+      'neumeric': 'handleIsNeumeric',
+      'alphanumeric': 'handleIsAlphanumeric',
+      'alpha': 'handleIsAlpha',
+      'date': 'handleIsDate',
+      'custom': 'handleIsCustom',
+    }
   }
 
   emptyObject(obj) {
@@ -103,66 +117,6 @@ export default class Validator {
       return {};
     } else {
       // params[0] is not boolean
-      return 'Something went wrong';
-    }
-  }
-
-  async handleIsMax(params, fieldData) {
-    if (!fieldData) {
-      // fieldData isn't present, throw error
-      return '';
-    }
-
-    // params[0] is either an integer, or a float, or a single character
-    // params[1] is the custom message
-
-    if (!Array.isArray(params)) {
-      params = [params];
-    }
-
-    if (this.isNumericOrSingleChar(params[0])) {
-      // the maximum value msut be an integer or a float or a single character
-      if (fieldData > params[0]) {
-        // the value is greater than the maximum value, throw error
-        return params.length === 2 && params[1].trim() != ''
-          ? params[1]
-          : 'This field value is too large';
-      } else {
-        // the value is less or equal to the maximum value, return no error
-        return {};
-      }
-    } else {
-      // params[0] is not integer or float or single character
-      return 'Something went wrong';
-    }
-  }
-
-  async handleIsMin(params, fieldData) {
-    if (!fieldData) {
-      // fieldData isn't present, throw error
-      return '';
-    }
-
-    // params[0] is either an integer, or a float, or a single character
-    // params[1] is the custom message
-
-    if (!Array.isArray(params)) {
-      params = [params];
-    }
-
-    if (this.isNumericOrSingleChar(params[0])) {
-      // the minimum value msut be an integer or a float or a single character
-      if (fieldData < params[0]) {
-        // the value is less than the minimum value, throw error
-        return params.length === 2 && params[1].trim() != ''
-          ? params[1]
-          : 'This field value is too small';
-      } else {
-        // the value is greater or equal to the minimum value, return no error
-        return {};
-      }
-    } else {
-      // params[0] is not integer or float or single character
       return 'Something went wrong';
     }
   }
@@ -599,19 +553,26 @@ export default class Validator {
   }
 
   async handleAttributeValidation(attribute, params, fieldData) {
-    // console.log(`${attribute} | ${params} | ${fieldData}`);
+    if (attribute === 'type') {
+      // check if the params is an array
+      if (!Array.isArray(params)) {
+        params = [params];
+      }
 
-    if (attribute === 'required') {
+      // check if the type is available in the availableTypes
+      if (this.availableTypes.hasOwnProperty(params[0])) {
+        let methodName = this.availableTypes[params[0]];
+        return await this[methodName](params, fieldData);
+      } else {
+        return 'Invalid type';
+      }
+    }
+
+    else if (attribute === 'required') {
       return await this.handleRequired(params, fieldData);
     } else if (attribute === 'email') {
       return await this.handleIsEmail(params, fieldData);
     }
-
-    // else if (attribute === 'min') {
-    //   return await this.handleMin(params, fieldData);
-    // } else if (attribute === 'max') {
-    //   return await this.handleMax(params, fieldData);
-    // }
     else if (attribute === 'min_len') {
       return await this.handleMinLength(params, fieldData);
     } else if (attribute === 'max_len') {
@@ -620,27 +581,31 @@ export default class Validator {
       return await this.handleInBetween(params, fieldData);
     } else if (attribute === 'unique') {
       return await this.handleIsUnique(params, fieldData);
-    } else if (attribute === 'number') {
-      return await this.handleIsNumber(params, fieldData);
-    } else if (attribute === 'float') {
-      return await this.handleIsFloat(params, fieldData);
-    } else if (attribute === 'int') {
-      return await this.handleIsInteger(params, fieldData);
-    } else if (attribute === 'bool') {
-      return await this.handleIsBoolean(params, fieldData);
-    } else if (attribute === 'char') {
-      return await this.handleIsCharacter(params, fieldData);
-    } else if (attribute === 'numeric') {
-      return await this.handleIsNeumeric(params, fieldData);
-    } else if (attribute === 'string') {
-      return await this.handleIsString(params, fieldData);
-    } else if (attribute === 'date') {
-      return await this.handleIsDate(params, fieldData);
-    } else if (attribute === 'alpha') {
-      return await this.handleIsAlpha(params, fieldData);
-    } else if (attribute === 'alphanumeric') {
-      return await this.handleIsAlphanumeric(params, fieldData);
-    } else if (attribute === 'in') {
+    }
+
+    // else if (attribute === 'number') {
+    //   return await this.handleIsNumber(params, fieldData);
+    // } else if (attribute === 'float') {
+    //   return await this.handleIsFloat(params, fieldData);
+    // } else if (attribute === 'int') {
+    //   return await this.handleIsInteger(params, fieldData);
+    // } else if (attribute === 'bool') {
+    //   return await this.handleIsBoolean(params, fieldData);
+    // } else if (attribute === 'char') {
+    //   return await this.handleIsCharacter(params, fieldData);
+    // } else if (attribute === 'numeric') {
+    //   return await this.handleIsNeumeric(params, fieldData);
+    // } else if (attribute === 'string') {
+    //   return await this.handleIsString(params, fieldData);
+    // } else if (attribute === 'date') {
+    //   return await this.handleIsDate(params, fieldData);
+    // } else if (attribute === 'alpha') {
+    //   return await this.handleIsAlpha(params, fieldData);
+    // } else if (attribute === 'alphanumeric') {
+    //   return await this.handleIsAlphanumeric(params, fieldData);
+    // } 
+
+    else if (attribute === 'in') {
       return await this.handleIsIn(params, fieldData);
     } else if (attribute === 'not_in') {
       return await this.handleIsNotIn(params, fieldData);
