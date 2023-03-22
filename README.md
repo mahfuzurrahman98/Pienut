@@ -1,4 +1,4 @@
-#### An MVC wrapper over Express.JS and MongoDB
+### Pienut, an MVC wrapper over Express.JS and MongoDB
 
 Pienut is a lightweight and efficient MVC framework that is built on top of Express JS and Mongoose. It comes equipped with some of the core components of MVC architecture, such as the Model and Controller classes. Additionally, Pienut has a Route class that serves as a convenient wrapper over the Express router, simplifying the routing process for developers.
 
