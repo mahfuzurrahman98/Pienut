@@ -98,10 +98,18 @@ export default new User();
 - [x] **Defining the Schema**
       The `schemaObj` property is an object that defines the schema for the Model. You can define the fields and their properties according to the Mongoose schema specification.
       In the example above, the `User` Model has fields for `name`, `username`, `email`, `password`, `role`, `active`, and `deletedAt`. Each field has its own properties such as `type`, `required`, `unique`, `default`, and more.
-- [x] **Register\*\***ing the Model\*\*
+- [x] **Registering the Model**
       In the constructor, we call the `makeModel` method to create the Model using the `collectionName` and `schemaObj` properties. This method creates a Mongoose model instance that we can use to perform CRUD operations on our database.
 
 **Notable:**
 
 - _Soft Delete:_ If you want to enable soft delete for your Model, you can call the `enableSoftDelete` method and pass in `true`. This will set a `deletedAt` field for the document instead of actually deleting it from the database.
 - _Hidden Fields:_ If you want to hide certain fields from the response object when querying the Model, you can call the `setHiddenAttributes` method and pass in an array of fields to be hidden. In the example above, we're hiding the `password` and `deletedAt` fields from the response.
+
+#### #Auth
+
+---
+
+The base `Auth` class in Pienut is responsible for handling auth mechanism, it is basically built on `jsonwebtoken` and `httpOnly-cookie`
+
+`Auth` class which contains several static methods that handle authentication and authorization logic. The `createAccessToken()` method creates an access token using the `jsonwebtoken` library, while the `createRefreshToken()` method creates a refresh token and stores it in a database. The `verifyToken()` method verifies a token using the `jsonwebtoken` library, and the `tokenExists()` method checks whether a token exists in the database for a given user ID. The `isAuthenticated()` method is a middleware that checks whether a request is authenticated by checking for a valid access token in the request headers.
