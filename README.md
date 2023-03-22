@@ -4,7 +4,7 @@ Pienut is a lightweight and efficient MVC framework that is built on top of Expr
 
 One of the standout features of Pienut is its custom-written Validation class, which helps ensure that your application's data is always in a valid state. Pienut also provides an authentication setup that utilizes JWT and refresh tokens, providing enhanced security for your application.
 
-> Before jumping to the documentation of `Pienut`, It is highly recomended to go to the [Pienut development setup](https://github.com/mahfuzurrahman98/Pienut-Dev-Setup) repository and clone this to start writing code.
+> Before jumping to the documentation of `Pienut`, It is highly recomended to go to the [Pienut development setup](https://github.com/mahfuzurrahman98/Pienut-Dev-Setup) repository and clone that to start writing code in a more guided way.
 >
 > `git clone git@github.com:mahfuzurrahman98/Pienut-Dev-Setup.git`
 
