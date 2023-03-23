@@ -12,7 +12,7 @@ git clone git@github.com:mahfuzurrahman98/Pienut-Dev-Setup.git
 >
 > `cd` into the project directory and install `pienut` using the following command
 ```
-https://github.com/mahfuzurrahman98/Pienut
+npm install pienut
 ```
 >
 > Let's dive into the docs
