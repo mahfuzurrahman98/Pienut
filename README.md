@@ -167,7 +167,7 @@ const rules = {
   },
   gender: {
     type: ['char'], // error message is optional
-    in: ['M', 'F', 'O'],
+    in: [['M', 'F', 'O']],
   },
   age: {
     type: ['int'], // should be an integer in term of both datatype and value
