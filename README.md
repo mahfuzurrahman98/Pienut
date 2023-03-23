@@ -8,6 +8,12 @@ One of the standout features of Pienut is its custom-written Validation class, w
 >
 > `git clone git@github.com:mahfuzurrahman98/Pienut-Dev-Setup.git`
 
+1. [Route](/#route)
+2. [Controller](/#controller)
+3. [Model](/#model)
+4. [Auth](/#auth)
+5. [Validator](/#validator)
+
 #### #Route
 
 ---
@@ -117,3 +123,72 @@ export default new User();
 The base `Auth` class in Pienut is responsible for handling auth mechanism, it is basically built on `jsonwebtoken` and `httpOnly-cookie`
 
 `Auth` class which contains several static methods that handle authentication and authorization logic. The `createAccessToken()` method creates an access token using the `jsonwebtoken` library, while the `createRefreshToken()` method creates a refresh token and stores it in a database. The `verifyToken()` method verifies a token using the `jsonwebtoken` library, and the `tokenExists()` method checks whether a token exists in the database for a given user ID. The `isAuthenticated()` method is a middleware that checks whether a request is authenticated by checking for a valid access token in the request headers.
+
+#### #Validator
+
+The Validator class is designed as a custom implementation to facilitate the validation of incoming requests. Unlike middleware, it is employed within the controller after the request has been accepted, but prior to executing any business logic or database operations and sending back the response. It features an extensive array of methods that enable comprehensive data validation, ensuring that incoming requests meet the defined criteria before proceeding with further processing.
+
+To use validator first you need to import it
+
+```
+import { Validator } from 'pienut';
+```
+
+Here is a sample piece of code beow on how to use it in your code
+
+```
+const rules = {
+  name: {
+    type: ['string', 'Name must be a string'],
+    required: [true, 'Name is required'],
+  },
+  username: {
+    type: ['string', 'Name must be a string'],
+    required: [true, 'Userame is required'],
+    unique: [['users', 'username'], 'Username is already taken'],
+  },
+  email: {
+    required: true,
+    email: [true, 'Email format is invalid'],
+    unique: [['users', 'email'], 'Email is already taken'],
+  },
+  gender: {
+    type: ['char'], // error message is optional
+    in: ['M', 'F', 'O'],
+  },
+  age: {
+    type: ['int'], // should be an integer in term of both datatype and value
+    between: [[18, 40], 'Age must be between 18 and 40'],
+    not_in: [[24, 30, 36], 'Age 30 is not allowed'],
+  },
+  phone: {
+    type: ['neumeric'], // neumeric is a string only containing numbers
+    min_len: [10, 'Phone number must be at least 10 characters'],
+  },
+  password: {
+    required: [true, 'Password is mandatory'],
+    min_len: [6, 'Password must be at least 6 characters'],
+    max_len: [10, 'Password must be at most 10 characters'],
+    regex: [
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/,
+      'Password must contain at least one uppercase letter, one lowercase letter and one number',
+    ],
+  },
+};
+const validator = new Validator(rules);
+await validator.run(req.body);
+
+if (validator.fails()) {
+  return this.sendApiResponse(res, 400, validator.errors());
+}
+```
+
+There are some other validator attribute you can use:
+
+1. `type: ['alphaneumeric']` means the string should contain both _alphabets_ and _numbers_
+2. `type: ['alpha']` means the string should contain only _alphabets_
+3. `type: ['neumeric']` means the string should only contain _digits_
+4. `type: ['number']` means the given type is a _number_, e.g `{'45', 25.1, 78, '4.3'}`
+5. `type: ['float']` means the type should be _float_, e.g `4.5 is valid` but `'4.5' is not`
+6. `type: ['bool']` means the type is boolean
+7. The `date` validation will be added soon
