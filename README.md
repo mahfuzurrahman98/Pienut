@@ -6,8 +6,16 @@ One of the standout features of Pienut is its custom-written Validation class, w
 
 > Before jumping to the documentation of `Pienut`, It is highly recomended to go to the [Pienut development setup](https://github.com/mahfuzurrahman98/Pienut-Dev-Setup) repository and clone that to start writing code in a more guided way.
 >
-> `git clone git@github.com:mahfuzurrahman98/Pienut-Dev-Setup.git`
+```
+git clone git@github.com:mahfuzurrahman98/Pienut-Dev-Setup.git
+```
 >
+> `cd` into the project directory and install `pienut` using the following command
+```
+https://github.com/mahfuzurrahman98/Pienut
+```
+>
+> Let's dive into the docs
 > 1. [Route](#route)
 > 2. [Controller](#controller)
 > 3. [Model](#model)
