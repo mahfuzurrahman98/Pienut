@@ -20,7 +20,7 @@ npm install pienut
 > 2. [Controller](#controller)
 > 3. [Model](#model)
 > 4. [Auth](#auth)
-> 5. [Validator](/#validator)
+> 5. [Validator](#validator)
 
 #### #Route
 
