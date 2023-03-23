@@ -8,7 +8,7 @@ One of the standout features of Pienut is its custom-written Validation class, w
 >
 > `git clone git@github.com:mahfuzurrahman98/Pienut-Dev-Setup.git`
 
-1. [Route](/#route)
+1. [Route](#route)
 2. [Controller](/#controller)
 3. [Model](/#model)
 4. [Auth](/#auth)
@@ -106,10 +106,13 @@ export default new User();
 ```
 
 - [x] **Defining the Schema**
-      The `schemaObj` property is an object that defines the schema for the Model. You can define the fields and their properties according to the Mongoose schema specification.
-      In the example above, the `User` Model has fields for `name`, `username`, `email`, `password`, `role`, `active`, and `deletedAt`. Each field has its own properties such as `type`, `required`, `unique`, `default`, and more.
+
+  The `schemaObj` property is an object that defines the schema for the Model. You can define the fields and their properties according to the Mongoose schema specification.
+  In the example above, the `User` Model has fields for `name`, `username`, `email`, `password`, `role`, `active`, and `deletedAt`. Each field has its own properties such as `type`, `required`, `unique`, `default`, and more.\*\*
+
 - [x] **Registering the Model**
-      In the constructor, we call the `makeModel` method to create the Model using the `collectionName` and `schemaObj` properties. This method creates a Mongoose model instance that we can use to perform CRUD operations on our database.
+
+  In the constructor, we call the `makeModel` method to create the Model using the `collectionName` and `schemaObj` properties. This method creates a Mongoose model instance that we can use to perform CRUD operations on our database.
 
 **Notable:**
 
@@ -125,6 +128,8 @@ The base `Auth` class in Pienut is responsible for handling auth mechanism, it i
 `Auth` class which contains several static methods that handle authentication and authorization logic. The `createAccessToken()` method creates an access token using the `jsonwebtoken` library, while the `createRefreshToken()` method creates a refresh token and stores it in a database. The `verifyToken()` method verifies a token using the `jsonwebtoken` library, and the `tokenExists()` method checks whether a token exists in the database for a given user ID. The `isAuthenticated()` method is a middleware that checks whether a request is authenticated by checking for a valid access token in the request headers.
 
 #### #Validator
+
+---
 
 The Validator class is designed as a custom implementation to facilitate the validation of incoming requests. Unlike middleware, it is employed within the controller after the request has been accepted, but prior to executing any business logic or database operations and sending back the response. It features an extensive array of methods that enable comprehensive data validation, ensuring that incoming requests meet the defined criteria before proceeding with further processing.
 
