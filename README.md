@@ -29,10 +29,13 @@ npm install pienut
 To define a route using the `Route` class, follow these steps:
 
 - Import the `Route` class from the `pienut` module.
+```
+  import { Route } from 'pienut';
+```
 - Create a new instance of the `Route` class.
 
   ```
-  import { Route } from 'pienut';
+  const router = new Route();
   ```
 
 - Use the appropriate HTTP method function (`get`, `post`, `put`, `patch`, or `delete`) to define the route and specify the path, controller, and action.
